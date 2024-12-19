@@ -1,41 +1,117 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-  </head>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="styles/index.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+            text-align: center;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
 
-  <body>
-    <div class="container">
-      <h1>Welcome to Tauri!</h1>
+<body>
+    <div id="navbar-placeholder"></div>
 
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
-      </div>
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4">Benvenuto nell'app di apprendimento su rust</h1>
+            <p class="lead">Apprenderai le parti fondamentali di rust e diventerai un esperto rustiano.</p>
+            <!-- <a href="#" class="btn btn-primary btn-lg">Scopri di più</a> -->
+        </div>
+    </section>
 
-      <p>Click on the Tauri logo to learn more about the framework</p>
-
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p id="greet-msg"></p>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Glossario</h3>
+                <p>Il glossario è la sezione nel quale studierai o ripasserai le parti fondanti di rust, come le funzioni o le variabili.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Playground</h3>
+                <p>Una sezione nel quale tu puoi eseguire qualsiasi codice a tuo piacere giusto per provare, senza dover scaricare rust.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>Learning</h3>
+                <p>Qui imparerai effetivamente a diventere un esperto e come iniziare ad usare rust.</p>
+            </div>
+        </div>
     </div>
-  </body>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const { invoke } = window.__TAURI__.core;
+
+        function setCookie(cookieName, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cookieName + "=" + value + ";" + expires + ";path=/";
+        }
+        
+        function getCookie(cookieName) {
+            let name = cookieName + "=";
+            let cookies = document.cookie.split(';');
+
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+
+                while (cookie.charAt(0) == ' ') {
+                    cookie = cookie.substring(1);
+                }
+
+                if (cookie.indexOf(name) == 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+
+            return "";
+        }
+
+        function startSession() {
+            let session_id = getCookie("RUST_SESSION_ID");
+            let arguments = {};
+
+            if (session_id != "") {
+                arguments = {
+                    cookieSessionId: session_id,
+                };
+            }
+
+            invoke("start_session", arguments)
+                .then(uuid => {
+                    if (session_id == "") {
+                        setCookie("RUST_SESSION_ID", uuid, 1);
+                    }
+                })
+                .catch(e => console.error(e));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            invoke("get_navbar", {})
+                .then(navbar => {
+                    document.getElementById('navbar-placeholder').innerHTML = navbar;
+                    
+                    document.getElementById('login').href = window.location.origin + "/login.html";
+                    document.getElementById('signin').href = window.location.origin + "/signin.html";
+                    document.getElementById('home').href = window.location.origin + "/index.html";
+                    document.getElementById('glossario').href = window.location.origin + "/glossario.html";
+                    document.getElementById('playground').href = window.location.origin + "/playground.html";
+
+                    startSession();
+                });
+        });
+    </script>
+</body>
 </html>
