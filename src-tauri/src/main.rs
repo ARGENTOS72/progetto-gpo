@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    test_tauri2_lib::run()
+    progetto_gpo_lib::run()
 }

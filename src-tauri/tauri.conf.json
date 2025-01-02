@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0-rc",
-  "productName": "test-tauri2",
+  "productName": "progetto-gpo",
   "version": "0.1.0",
-  "identifier": "skibidi.dop.dop",
+  "identifier": "progetto-gpo",
   "build": {
     "frontendDist": "../src"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "test-tauri2",
+        "title": "progetto-gpo",
         "width": 800,
         "height": 600
       }

@@ -7,7 +7,7 @@ pub enum Error {
     #[error(transparent)]
     Json(#[from] serde_json::error::Error),
     #[error(transparent)]
-    DbError(#[from] sqlx::error::Error),
+    DbError(#[from] surrealdb::Error),
 }
 
 // we must manually implement serde::Serialize

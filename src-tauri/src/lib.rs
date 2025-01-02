@@ -1,17 +1,17 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 mod error;
 
-use futures::TryStreamExt;
+use log::{debug, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use sqlx::{prelude::FromRow, Pool, Sqlite};
 use std::{
     collections::HashMap,
-    fs::{read_to_string, remove_file, File},
-    io::{BufReader, Read},
+    fs::{read_to_string, File},
+    io::Read,
     path::Path,
     sync::Mutex,
 };
+use surrealdb::{engine::remote::ws::Wss, opt::auth::Root, Surreal};
 use tauri::State;
 use uuid::Uuid;
 
@@ -49,10 +49,28 @@ struct Session {
     values: SessionValues,
 }
 
+impl std::fmt::Display for Session {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Session: Id - {}; Values - {}",
+            // It will be printed only when id exists
+            self.id.unwrap(),
+            self.values
+        )
+    }
+}
+
 #[derive(Deserialize, Serialize)]
 struct SessionValues {
     #[serde(flatten)]
     values: HashMap<String, Value>,
+}
+
+impl std::fmt::Display for SessionValues {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.values)
+    }
 }
 
 impl SessionValues {
@@ -84,89 +102,76 @@ impl From<&Value> for SerializeUser {
     }
 }
 
-#[tauri::command]
-fn get_user_session(session: State<'_, Session>) -> Result<SerializeUser> {
-    let data = read_to_string(format!("sess_{}.json", session.id.unwrap()))?;
-    let values: SessionValues = serde_json::from_str(&data)?;
-    let user: SerializeUser = values.values.get("user_name").unwrap().into();
-
-    Ok(user)
-}
-
 #[derive(Deserialize)]
 struct UserDeserialize {
     email: String,
     password: String,
 }
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, Deserialize)]
 struct UserDb {
     id: i32,
     email: String,
     password: String,
 }
 
+impl std::fmt::Display for UserDb {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "User: Id - {}; Email - {}", self.id, self.email)
+    }
+}
+
 #[tauri::command]
 async fn login(app_state: State<'_, AppState>, user: UserDeserialize) -> Result<()> {
-    let sql = "SELECT * FROM users WHERE email = ?1 AND password = ?2";
+    let sql = "SELECT * FROM user WHERE email = $email AND password = $password";
 
-    let result: UserDb = sqlx::query_as(sql)
-        .bind(user.email)
-        .bind(user.password)
-        .fetch_one(&app_state.db)
-        .await
-        .unwrap();
+    // let mut result = app_state
+    //     .db
+    //     .query(sql)
+    //     .bind(("email", user.email))
+    //     .bind(("password", user.password))
+    //     .await?;
 
-    println!("{:?}", result);
+    // let user: Option<UserDb> = result.take(0)?;
+
+    // if let Some(user) = user {
+    //     debug!("Logged in as {}", user);
+    // }
 
     Ok(())
 }
 
 fn save_state(session: State<'_, Session>) -> Result<()> {
+    let file_path = format!("sess_{}.json", session.id.unwrap());
+
+    debug!("Salvando dati nella sessione: {}", file_path);
+
     let serialized = serde_json::to_string(&session.values)?;
-    std::fs::write(format!("sess_{}.json", session.id.unwrap()), serialized)?;
+    std::fs::write(file_path, serialized)?;
+
     Ok(())
 }
 
-type Db = Pool<Sqlite>;
+type Db = Surreal<surrealdb::engine::remote::ws::Client>;
 
 struct AppState {
     db: Db,
 }
 
-async fn setup_db(app: &tauri::App) -> Db {
-    use sqlx::{migrate::MigrateDatabase, sqlite::SqlitePoolOptions};
-    use tauri::Manager;
+async fn setup_db(_: &tauri::App) -> Db {
+    let db =
+        Surreal::new::<Wss>("personal-projec-069vchuhbhqijbenh167ov516g.aws-euw1.surreal.cloud")
+            .await
+            .unwrap();
 
-    let mut path = app.path().app_data_dir().expect("failed to get data_dir");
+    db.use_ns("project").use_db("project").await.unwrap();
 
-    match std::fs::create_dir_all(path.clone()) {
-        Ok(_) => {}
-        Err(err) => {
-            panic!("error creating directory {}", err);
-        }
-    };
-
-    path.push("db.sqlite");
-
-    remove_file(&path).unwrap();
-
-    Sqlite::create_database(
-        format!(
-            "sqlite:{}",
-            path.to_str().expect("path should be something")
-        )
-        .as_str(),
-    )
+    db.signin(Root {
+        username: &std::env::var("DB_USERNAME").unwrap(),
+        password: &std::env::var("DB_PASSWORD").unwrap(),
+    })
     .await
-    .expect("failed to create database");
-
-    let db = SqlitePoolOptions::new()
-        .connect(path.to_str().unwrap())
-        .await
-        .unwrap();
-
-    sqlx::migrate!("./migrations").run(&db).await.unwrap();
+    .unwrap();
 
     db
 }
@@ -177,47 +182,65 @@ fn start_session(
     cookie_session_id: Option<Uuid>,
 ) -> Result<Uuid> {
     // Siccome è multithread, tecnicamente, prendiamo "controllo" del valore (Semafori)
+    // Dopo l'uso del metodo "lock()" si può usare la variabile come se fosse la struttura originale
     let mut session = session.lock().unwrap();
 
-    // Se abbiamo già la sessione non la ricarichiamo
+    // Se abbiamo già la sessione caricata non la ricarichiamo
+    // (ritorniamo id perché obbligati [magari sostituire con Option<Uuid>])
     if let (Some(session_id), Some(cookie_session_id)) = (session.id, cookie_session_id) {
         if session_id == cookie_session_id {
+            warn!("Ritorno di variabile/dato inutile, possibile sostituire ritorno con 'Option<Uuid>'");
+
             return Ok(session_id);
         }
     }
 
-    println!("{:?}", cookie_session_id);
-
-    // Riceve id sessione, se vuoto ne crea uno
+    // Riceve id sessione, se non c'è ne crea uno
     session.id = Some(cookie_session_id.unwrap_or(Uuid::new_v4()));
 
     let session_id = session.id.unwrap();
 
     // Percorso del file di sessione
-    let path = Path::new(".\\sessions").join(format!("sess_{session_id}.json"));
+    let path = Path::new("./sessions").join(format!("sess_{session_id}.json"));
+
+    // Apre il file di sessione (ritorna Result quindi possibile fare check errori)
     let file = File::open(&path);
-    println!("{}", path.display());
 
     // Controlliamo se il file esiste o no
     if let Ok(mut file) = file {
+        // In questo caso esiste
         // Se esiste leggiamo
         let mut data = String::new();
 
+        // Prendo i dati all'interno della sessione e li inserisco all'interno dell'hashmap
         file.read_to_string(&mut data)?;
         let values: SessionValues = serde_json::from_str(&data)?;
 
+        // Inserisco i valori all'interno della struttura
         session.values = values;
     } else {
-        // Se non esiste creaiamo (vuoto)
+        // In questo caso non esiste
+        // Se non esiste creaiamo il file di session (vuoto)
         let serialized = serde_json::to_string(&session.values)?;
         std::fs::write(path, serialized)?;
     }
+
+    info!("Caricati i dati di sessione file: {}", session);
 
     Ok(session_id)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    dotenv::dotenv().ok();
+
+    env_logger::Builder::new()
+        .filter_level(log::LevelFilter::max())
+        .filter_module("tokio_tungstenite", log::LevelFilter::Off)
+        .filter_module("tungstenite", log::LevelFilter::Off)
+        .filter_module("rustls", log::LevelFilter::Off)
+        .init();
+
     tauri::Builder::default()
         .setup(|app| {
             use tauri::Manager;
