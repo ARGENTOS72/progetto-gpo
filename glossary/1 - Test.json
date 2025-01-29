@@ -1,0 +1,56 @@
+{
+  "sub_chapters": [
+    {
+      "title": "1.1 - Installazione",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Il primo passo è installare Rust. Scaricheremo Rust tramite <a href=\"test\">Rustup</a>, uno strumento da riga di comando per la gestione delle versioni di Rust e degli strumenti associati. Avrai bisogno di una connessione Internet per il download."
+        },
+        {
+          "type": "comment",
+          "text": "Note: If you prefer not to use rustup for some reason, please see the Other Rust Installation Methods page for more options."
+        },
+        {
+          "type": "paragraph",
+          "text": "I seguenti passaggi installano l'ultima versione stabile del compilatore Rust. Le garanzie di stabilità di Rust assicurano che tutti gli esempi nel libro che vengono compilati continueranno a essere compilati con le versioni più recenti di Rust. L'output potrebbe differire leggermente tra le versioni perché Rust spesso migliora i messaggi di errore e gli avvisi. In altre parole, qualsiasi versione più recente e stabile di Rust installata seguendo questi passaggi dovrebbe funzionare come previsto con il contenuto di questo libro."
+        },
+        {}
+      ]
+    },
+    {
+      "title": "1.2 - Hawk",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Test"
+        },
+        {
+          "type": "code",
+          "text": "fn main() {\nprintln!(\"Hello, World!\");\n}"
+        },
+        {
+          "type": "paragraph",
+          "text": "Si bravo"
+        }
+      ]
+    },
+    {
+      "title": "1.3 - Fanum",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Test"
+        },
+        {
+          "type": "code",
+          "text": "fn main() {\nprintln!(\"Hello, World!\");\n}"
+        },
+        {
+          "type": "paragraph",
+          "text": "Si bravo"
+        }
+      ]
+    }
+  ]
+}

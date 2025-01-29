@@ -1,0 +1,55 @@
+{
+    "sub_chapters": [
+        {
+            "title": "7.1 - Skibindi",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Test"
+                },
+                {
+                    "type": "code",
+                    "text": "fn main() {\nprintln!(\"Hello, World!\");\n}"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Si bravo"
+                }
+            ]
+        },
+        {
+            "title": "7.2 - Hawk",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Test"
+                },
+                {
+                    "type": "code",
+                    "text": "fn main() {\nprintln!(\"Hello, World!\");\n}"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Si bravo"
+                }
+            ]
+        },
+        {
+            "title": "7.3 - Fanum",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Test"
+                },
+                {
+                    "type": "code",
+                    "text": "fn main() {\nprintln!(\"Hello, World!\");\n}"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Si bravo"
+                }
+            ]
+        }
+    ]
+}
