@@ -1,8 +1,12 @@
 use dioxus::prelude::*;
 
+const CSS: Asset = asset!("/assets/styling/login.css");
+
 #[component]
 pub fn Login() -> Element {
     rsx! {
+        document::Stylesheet { href: CSS }
+
         div { class: "container mt-5 d-flex justify-content-center align-items-center",
             div { class: "row w-100",
                 div { class: "col-md-6 d-flex justify-content-center",
@@ -62,9 +66,5 @@ pub fn Login() -> Element {
                 }
             }
         }
-
-        // style { "scoped": "false", lang: "css",
-        //     "body {\n    background-color: #2c2c2c;\n    color: white;\n}\n\n.form-container {\n    background-color: white;\n    color: black;\n    border-radius: 10px;\n    padding: 20px;\n    width: 75%;\n}\n\n.btn-orange:hover {\n    background-color: #e55b00;\n}\n\n.crab {\n    width: 100%;\n    max-width: 200px;\n}"
-        // }
     }
 }

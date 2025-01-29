@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::Navbar;
-use crate::views::{Blog, Home};
+use crate::views::{Blog, Home, Glossary, Login};
 
 mod components;
 mod backend;
@@ -14,8 +14,15 @@ enum Route {
     #[layout(Navbar)]
     #[route("/")]
     Home {},
+
     #[route("/blog/:id")]
     Blog { id: i32 },
+
+    #[route("/glossary")]
+    Glossary {},
+
+    #[route("/login")]
+    Login {}
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
