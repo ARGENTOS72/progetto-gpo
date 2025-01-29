@@ -1,0 +1,21 @@
+body {
+    background-color: #2c2c2c;
+    color: white;
+}
+
+.form-container {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 20px;
+    width: 75%;
+}
+
+.btn-orange:hover {
+    background-color: #e55b00;
+}
+
+.crab {
+    width: 100%;
+    max-width: 200px;
+}

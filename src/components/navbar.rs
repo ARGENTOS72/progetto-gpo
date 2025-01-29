@@ -1,5 +1,5 @@
 use crate::Route;
-use dioxus::prelude::*;
+use dioxus::{html::link, prelude::*};
 
 // const NAVBAR_CSS: Asset = asset!("/assets/styling/navbar.css");
 
@@ -11,12 +11,21 @@ pub fn Navbar() -> Element {
 
         nav { class: "navbar navbar-expand-sm bg-body-tertiary border-bottom border-body sticky-top",
             div { class: "container-fluid",
-                img {
-                    src: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg",
-                    alt: "Rust",
-                    width: "30",
-                    class: "me-2",
+                div {
+                    Link { to: Route::Home{},
+                        img {
+                            src: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg",
+                            alt: "Rust",
+                            width: "30",
+                            class: "me-2",
+                            
+
+                        }
+                    }
+                    
                 }
+                
+
                 "\n        Ruster\n      "
                 button {
                     "data-bs-toggle": "collapse",
@@ -32,16 +41,11 @@ pub fn Navbar() -> Element {
                     class: "collapse navbar-collapse",
                     id: "navbarTogglerDemo01",
                     ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
+                        
+                            
+                        
                         li { class: "nav-item",
-                            // router_link { to: "/", class: "nav-link", id: "home", "Home" }
-                        }
-                        li { class: "nav-item",
-                            // router_link {
-                            //     to: "/glossario",
-                            //     class: "nav-link",
-                            //     id: "glossario",
-                            //     "Glossario"
-                            // }
+                            Link { to: Route::Glossary{}, "Glossary" }
                         }
                         li { class: "nav-item",
                             a { class: "nav-link", id: "playground", "Playground" }
@@ -49,14 +53,8 @@ pub fn Navbar() -> Element {
                     }
                     div { id: "account",
                         a { class: "btn btn-primary", id: "signin",
-                            "\n            Registrati\n          "
+                            Link { to: Route::Login{}, "Registrati" }//METTERE PARTE PER REGISTARTI SU Route::Login
                         }
-                        // router_link {
-                        //     to: "/accedi",
-                        //     class: "btn btn-primary",
-                        //     id: "login",
-                        //     "\n            Accedi\n          "
-                        // }
                     }
                 }
             }
