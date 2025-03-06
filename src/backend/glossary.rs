@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{fs::File, io::BufReader, path::Path};
+use std::io::{self, Read};  // Ensure `Read` is imported
 
 use crate::error::{Error, Result};
 
@@ -74,4 +75,15 @@ pub fn get_sub_chapters(chapter_name: &str) -> Result<Vec<SubChapter>> {
     };
 
     Ok(subchapters)
+}
+
+//fin?
+pub fn file_get_contents(file_name: &str) -> Result<String> {
+    let file = File::open(Path::new(GLOSSARY_PATH).join(file_name).with_extension("html"))?;
+    let mut contents = String::new();
+    let mut reader = BufReader::new(file);
+    
+    reader.read_to_string(&mut contents)?;
+
+    Ok(contents)
 }

@@ -4474,6 +4474,7 @@ name = "progetto-gpo"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "regex",
  "serde",
  "serde_json",
  "surrealdb",
