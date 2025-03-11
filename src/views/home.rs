@@ -1,8 +1,15 @@
 use dioxus::prelude::*;
 
+const CSS: Asset = asset!("/assets/styling/home.css");
+
 #[component]
 pub fn Home() -> Element {
     rsx! {
+        link {
+            rel: "stylesheet",
+            href: CSS,
+        }
+
         section { class: "hero-section",
             div { class: "container",
                 h1 { class: "display-4", "Benvenuto nell'app di apprendimento su rust" }

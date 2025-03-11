@@ -5,7 +5,7 @@ const CSS: Asset = asset!("/assets/styling/signup.css");
 #[component]
 pub fn Signup() -> Element {
     rsx! {
-        document::Stylesheet { href: CSS }
+        link { rel: "stylesheet", href: CSS }
 
         div { class: "container min-vh-100 d-flex justify-content-center align-items-center",
             div { class: "row justify-content-center w-100",
@@ -24,7 +24,7 @@ pub fn Signup() -> Element {
                                     required: true
                                 }
                             }
-                            
+
                             div { class: "mb-3",
                                 div { class: "row g-3",
                                     div { class: "col-md-6",

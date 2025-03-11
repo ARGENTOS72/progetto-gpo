@@ -1,12 +1,15 @@
-use dioxus::prelude::*;
 use crate::Route;
+use dioxus::prelude::*;
 
 const CSS: Asset = asset!("/assets/styling/login.css");
 
 #[component]
 pub fn Login() -> Element {
     rsx! {
-        document::Stylesheet { href: CSS }
+        link {
+            rel: "stylesheet",
+            href: CSS,
+        }
 
         div { class: "container mt-5 d-flex justify-content-center align-items-center",
             div { class: "row w-100",
@@ -45,10 +48,10 @@ pub fn Login() -> Element {
                             div { class: "mt-3",
                                 p {
                                     "Non hai un account? "
-                                    Link { 
+                                    Link {
                                         to: Route::Signup{},
                                         class: "nav-link",
-                                        "Registrati" 
+                                        "Registrati"
                                     }
                                 }
                             }
