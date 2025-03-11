@@ -1,0 +1,25 @@
+.account-container {
+    max-width: 800px;
+    width: 100%;
+}
+
+.account-info {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.list-group-item {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 0;
+}
+
+.btn-outline-danger {
+    transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+    background: #dc3545;
+    color: white !important;
+}
