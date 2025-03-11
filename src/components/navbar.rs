@@ -26,7 +26,6 @@ pub fn Navbar() -> Element {
                 }
                 
 
-                "\n        Ruster\n      "
                 button {
                     "data-bs-toggle": "collapse",
                     "data-bs-target": "#navbarTogglerDemo01",
@@ -40,20 +39,51 @@ pub fn Navbar() -> Element {
                 div {
                     class: "collapse navbar-collapse",
                     id: "navbarTogglerDemo01",
-                    ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
-                        
-                            
-                        
-                        li { class: "nav-item",
-                            Link { to: Route::Glossary{}, "Glossary" }
+                    div {
+                        class: "navbar-nav me-auto mb-2 mb-lg-0",
+                        div {class: "nav-item",
+                            a { class: "nav-link", id: "learning", "Learning" }
                         }
-                        li { class: "nav-item",
+                        div {class: "nav-item",
+                            Link { 
+                                to: Route::Glossary{},
+                                class: "nav-link",
+                                "Glossary" 
+                            }
+                        }
+                        div {class: "nav-item",
                             a { class: "nav-link", id: "playground", "Playground" }
                         }
                     }
-                    div { id: "account",
-                        a { class: "btn btn-primary", id: "signin",
-                            Link { to: Route::Login{}, "Registrati" }//METTERE PARTE PER REGISTARTI SU Route::Login
+                    // ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
+                        
+                            
+                    // li { class: "nav-item",
+                    //     a { class: "nav-link", id: "learning", "Learning" }
+                    // }
+                    // li { class: "nav-item",
+                    //     Link { 
+                    //         to: Route::Glossary{},
+                    //         class: "nav-link",
+                    //         "Glossary" 
+                    //     }
+                    // }
+                    // li { class: "nav-item",
+                    //     a { class: "nav-link", id: "playground", "Playground" }
+                    // }
+                    // }
+                    div { class: "d-flex",
+                        Link {
+                            to: Route::Login{},
+                            class: "btn btn-primary",
+                            "Sign In"
+                        }
+                    }
+                    div { class: "d-flex",
+                        Link {
+                            to: Route::Signup{},
+                            class: "btn btn-secondary",
+                            "Sign Up"
                         }
                     }
                 }

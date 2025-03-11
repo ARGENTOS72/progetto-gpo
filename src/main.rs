@@ -1,12 +1,13 @@
 use dioxus::prelude::*;
 
 use crate::components::Navbar;
-use crate::views::{Blog, Home, Glossary, Login};
+use crate::views::{Blog, Home, Glossary, Login, Signup};
 
 mod components;
 mod backend;
 mod error;
 mod views;
+
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -22,7 +23,10 @@ enum Route {
     Glossary {},
 
     #[route("/login")]
-    Login {}
+    Login {},
+
+    #[route("/signup")]
+    Signup {}
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
