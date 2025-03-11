@@ -43,7 +43,8 @@ pub fn Navbar() -> Element {
                         }
                         div {class: "nav-item",
                             Link {
-                                to: Route::Glossary{},
+                                to: Route::Login{},
+                                // to: Route::Glossary{},
                                 class: "nav-link",
                                 "Glossary"
                             }
