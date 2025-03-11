@@ -40,6 +40,16 @@ pub fn Home() -> Element {
                 }
             }
         }
+        div {class: "position-absolute top-100 start-50 translate-middle-x text-muted",
+            h6 {
+                "Creato dal gruppo"
+            }
+            p {
+                "Tomas Mateo Maurino Maceira, Aron Capraro, Giacomo Pascualini, Gabriele Bardin, Yari Montanaro, Sebastiano Tiveron"
+            }
+            
+
+        }
 
         // style { "scoped": "false", lang: "css",
         //     ".hero-section {\n  background-color: #f8f9fa;\n  padding: 50px 0;\n  text-align: center;\n}\nfooter {\n  background-color: #343a40;\n  color: white;\n  padding: 20px 0;\n  text-align: center;\n}"
