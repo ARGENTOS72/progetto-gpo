@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use crate::Route;
 
 const CSS: Asset = asset!("/assets/styling/login.css");
 
@@ -44,7 +45,11 @@ pub fn Login() -> Element {
                             div { class: "mt-3",
                                 p {
                                     "Non hai un account? "
-                                    a { href: "#", class: "text-primary", "Registrati" }
+                                    Link { 
+                                        to: Route::Signup{},
+                                        class: "nav-link",
+                                        "Registrati" 
+                                    }
                                 }
                             }
                         }

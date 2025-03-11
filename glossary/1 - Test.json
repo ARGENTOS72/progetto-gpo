@@ -1,21 +1,33 @@
 {
   "sub_chapters": [
+
     {
-      "title": "1.1 - Installazione",
+      "title": "1.1 - Il linguaggio di programmazione Rust",
       "content": [
         {
-          "type": "paragraph",
-          "text": "Il primo passo è installare Rust. Scaricheremo Rust tramite <a href=\"test\">Rustup</a>, uno strumento da riga di comando per la gestione delle versioni di Rust e degli strumenti associati. Avrai bisogno di una connessione Internet per il download."
-        },
-        {
-          "type": "comment",
-          "text": "Note: If you prefer not to use rustup for some reason, please see the Other Rust Installation Methods page for more options."
+          "type": "subtitle",
+          "text": "by Steve Klabnik and Carol Nichols, with contributions from the Rust Community"
         },
         {
           "type": "paragraph",
-          "text": "I seguenti passaggi installano l'ultima versione stabile del compilatore Rust. Le garanzie di stabilità di Rust assicurano che tutti gli esempi nel libro che vengono compilati continueranno a essere compilati con le versioni più recenti di Rust. L'output potrebbe differire leggermente tra le versioni perché Rust spesso migliora i messaggi di errore e gli avvisi. In altre parole, qualsiasi versione più recente e stabile di Rust installata seguendo questi passaggi dovrebbe funzionare come previsto con il contenuto di questo libro."
+          "text": "Questa versione del testo presuppone che tu stia utilizzando Rust 1.81.0 (rilasciato il 2024-09-04) o versione successiva. Consulta la sezione <a href=\"thosewhonose\">\"Installazione\" del Capitolo 1</a> per installare o aggiornare Rust."
         },
-        {}
+        {
+          "type": "paragraph",
+          "text": "Il formato HTML è disponibile online su <a href=\"https://doc.rust-lang.org/stable/book/\">https://doc.rust-lang.org/stable/book/</a> e offline con installazioni di Rust effettuate con <code>rustup</code>; esegui <code>rustup doc --book</code> per aprirlo."
+        },
+        {
+          "type": "paragraph",
+          "text": "Sono disponibili anche diverse <a href=\"thosewhonose\">traduzioni</a> della comunità."
+        },
+        {
+          "type": "paragraph",
+          "text": "Questo testo è disponibile in formato <a href=\"thosewhonose\">tascabile e ebook presso No Starch Press</a>."
+        },
+        {
+          "type": "box",
+          "text": "<strong>🚨 Vuoi un'esperienza di apprendimento più interattiva? Prova una versione diversa di Rust Book, con: quiz, evidenziazioni, visualizzazioni e altro ancora:</strong><a href=\"https://rust-book.cs.brown.edu\">https://rust-book.cs.brown.edu</a>"
+        }
       ]
     },
     {

@@ -6,3 +6,6 @@ mod glossary;
 
 mod login;
 pub use login::Login;
+
+mod signup;
+pub use signup::Signup;
