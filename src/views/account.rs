@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-const CSS: Asset = asset!("/assets/styling/signup.css");
+const CSS: Asset = asset!("/assets/styling/account.css");
 
 #[component]
 pub fn Account() -> Element {
@@ -9,54 +9,95 @@ pub fn Account() -> Element {
 
         div { class: "container min-vh-100 d-flex justify-content-center align-items-center",
             div { class: "row justify-content-center w-100",
-                div { class: "col-12 col-md-8 col-lg-6",
-                    div { class: "form-container shadow p-4 rounded-2",
-                        h3 { class: "mb-4 text-center", "REGISTRAZIONE" }
-                        form { id: "signup-form",
-                            div { class: "mb-3",
-                                label { r#for: "email", class: "form-label", "Email" }
-                                input {
-                                    placeholder: "esempio@email.com",
-                                    r#type: "email",
-                                    name: "email",
-                                    class: "form-control",
-                                    id: "email",
-                                    required: true
+                div { class: "col-12 col-md-10 col-lg-8",
+                    div { class: "account-container shadow p-4 rounded-3 bg-white",
+                        h3 { class: "mb-4 text-center border-bottom pb-3", "IL TUO ACCOUNT" }
+                       
+                        div { class: "row mb-5",
+                            div { class: "col-md-6",
+                                div { class: "account-info mb-4",
+                                    h4 { class: "mb-3 text-secondary", "Informazioni Personalizzate" }
+                                    ul { class: "list-group",
+                                        li { class: "list-group-item d-flex justify-content-between",
+                                            span { "Email registrata:" }
+                                            span { class: "text-muted", "utente@esempio.com" }
+                                        }
+                                        li { class: "list-group-item d-flex justify-content-between",
+                                            span { "Username:" }
+                                            span { class: "text-muted", "rust_developer" }
+                                        }
+                                    }
                                 }
                             }
                             
-                            div { class: "mb-3",
-                                div { class: "row g-3",
-                                    div { class: "col-md-6",
-                                        label { r#for: "password", class: "form-label", "Password" }
-                                        input {
-                                            placeholder: "Inserisci password",
-                                            r#type: "password",
-                                            name: "password",
-                                            class: "form-control",
-                                            id: "password",
-                                            required: true
-                                        }
-                                    }
-                                    div { class: "col-md-6",
-                                        label { r#for: "password2", class: "form-label", "Conferma Password" }
-                                        input {
-                                            placeholder: "Ripeti password",
-                                            r#type: "password",
-                                            name: "password2",
-                                            class: "form-control",
-                                            id: "password2",
-                                            required: true
-                                        }
-                                    }
-                                }
-                            }
+                            div { class: "col-md-6",
+                                form { id: "account-form",
+                                    h4 { class: "mb-3 text-secondary", "Modifica Dati" }
 
-                            div { class: "d-grid",
-                                button {
-                                    r#type: "submit",
-                                    class: "btn btn-primary w-100 py-2",
-                                    "Registrati ora"
+                                    div { class: "row g-3",
+                                        div { class: "col-md-6",
+                                            label { class: "form-label", "Nome" }
+                                            input { 
+                                                r#type: "text",
+                                                class: "form-control",
+                                                value: "Mario",
+                                                required: true
+                                            }
+                                        }
+                                        div { class: "col-md-6",
+                                            label { class: "form-label", "Cognome" }
+                                            input { 
+                                                r#type: "text",
+                                                class: "form-control",
+                                                value: "Rossi",
+                                                required: true
+                                            }
+                                        }
+                                    }
+
+                                    div { class: "mt-3",
+                                        label { class: "form-label", "Numero di Telefono" }
+                                        input { 
+                                            r#type: "tel",
+                                            class: "form-control",
+                                            placeholder: "+39 123 456 7890",
+                                            pattern: "[0-9]{10}"
+                                        }
+                                    }
+
+                                    h4 { class: "mt-4 mb-3 text-secondary", "Sicurezza" }
+                                    
+                                    div { class: "row g-3",
+                                        div { class: "col-md-6",
+                                            label { class: "form-label", "Nuova Password" }
+                                            input { 
+                                                r#type: "password",
+                                                class: "form-control",
+                                                placeholder: "••••••••"
+                                            }
+                                        }
+                                        div { class: "col-md-6",
+                                            label { class: "form-label", "Conferma Password" }
+                                            input { 
+                                                r#type: "password",
+                                                class: "form-control",
+                                                placeholder: "••••••••"
+                                            }
+                                        }
+                                    }
+
+                                    div { class: "d-grid gap-3 mt-4",
+                                        button { 
+                                            r#type: "submit",
+                                            class: "btn btn-primary w-100 py-2",
+                                            "Aggiorna Account"
+                                        }
+                                        button { 
+                                            r#type: "button",
+                                            class: "btn btn-outline-danger w-100",
+                                            "Elimina Account"
+                                        }
+                                    }
                                 }
                             }
                         }
