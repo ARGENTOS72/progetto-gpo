@@ -1,7 +1,19 @@
 use dioxus::prelude::*;
 
+use crate::backend::glossary::{get_sub_chapters, SubChapter};
+
 #[component]
-pub fn GlossaryNavigation() -> Element {
+pub fn GlossaryNavigation(chapters: Vec<String>, sub_chapters: Vec<String>) -> Element {
+    let sub_chapters = use_signal(|| {
+        let mut sub_chapters = Vec::new();
+
+        for chapter in &chapters {
+            sub_chapters.push(get_sub_chapters(chapter));
+        }
+
+        sub_chapters
+    });
+
     rsx! {
         div {
             class: "d-flex", style: "height: 100%;",

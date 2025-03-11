@@ -1,12 +1,13 @@
+use dioxus::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{fs::File, io::BufReader, path::Path};
 
-use crate::error::{Error, Result};
+use crate::error::Error;
 
 const GLOSSARY_PATH: &str = "./glossary";
 
-pub fn get_chapters() -> Result<Vec<String>> {
+pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
     let reading_dir = std::fs::read_dir(GLOSSARY_PATH)?;
 
     let mut chapters = Vec::new();
@@ -58,7 +59,7 @@ enum ContentType {
     Code,
 }
 
-pub fn get_sub_chapters(chapter_name: &str) -> Result<Vec<SubChapter>> {
+pub fn get_sub_chapters(chapter_name: &str) -> Result<Vec<SubChapter>, ServerFnError> {
     let file = File::open(
         Path::new(GLOSSARY_PATH)
             .join(chapter_name)

@@ -1,10 +1,10 @@
 use dioxus::prelude::*;
 
 use crate::components::Navbar;
-use crate::views::{Blog, Home, Glossary, Login};
+use crate::views::{Home, Login};
 
-mod components;
 mod backend;
+mod components;
 mod error;
 mod views;
 
@@ -15,11 +15,10 @@ enum Route {
     #[route("/")]
     Home {},
 
-    #[route("/blog/:id")]
-    Blog { id: i32 },
-
-    #[route("/glossary")]
-    Glossary {},
+    // #[route("/glossary")]
+    // Glossary {
+    //     chapter: Option<String>,
+    // },
 
     #[route("/login")]
     Login {}
@@ -42,6 +41,9 @@ fn App() -> Element {
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_SCSS }
 
-        Router::<Route> {}
+        div {
+            style: "height: 100%",
+            Router::<Route> {}
+        }
     }
 }

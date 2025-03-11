@@ -18,13 +18,10 @@ pub fn Navbar() -> Element {
                             alt: "Rust",
                             width: "30",
                             class: "me-2",
-                            
-
                         }
                     }
-                    
+
                 }
-                
 
                 "\n        Ruster\n      "
                 button {
@@ -41,11 +38,13 @@ pub fn Navbar() -> Element {
                     class: "collapse navbar-collapse",
                     id: "navbarTogglerDemo01",
                     ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
-                        
-                            
-                        
+
+
+
                         li { class: "nav-item",
-                            Link { to: Route::Glossary{}, "Glossary" }
+                            // Link { to: Route::Glossary{
+                            //     chapter: None,
+                            // }, "Glossary" }
                         }
                         li { class: "nav-item",
                             a { class: "nav-link", id: "playground", "Playground" }
