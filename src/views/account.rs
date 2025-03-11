@@ -32,39 +32,7 @@ pub fn Account() -> Element {
                             
                             div { class: "col-md-6",
                                 form { id: "account-form",
-                                    h4 { class: "mb-3 text-secondary", "Modifica Dati" }
-
-                                    div { class: "row g-3",
-                                        div { class: "col-md-6",
-                                            label { class: "form-label", "Nome" }
-                                            input { 
-                                                r#type: "text",
-                                                class: "form-control",
-                                                value: "Mario",
-                                                required: true
-                                            }
-                                        }
-                                        div { class: "col-md-6",
-                                            label { class: "form-label", "Cognome" }
-                                            input { 
-                                                r#type: "text",
-                                                class: "form-control",
-                                                value: "Rossi",
-                                                required: true
-                                            }
-                                        }
-                                    }
-
-                                    div { class: "mt-3",
-                                        label { class: "form-label", "Numero di Telefono" }
-                                        input { 
-                                            r#type: "tel",
-                                            class: "form-control",
-                                            placeholder: "+39 123 456 7890",
-                                            pattern: "[0-9]{10}"
-                                        }
-                                    }
-
+                    
                                     h4 { class: "mt-4 mb-3 text-secondary", "Sicurezza" }
                                     
                                     div { class: "row g-3",
