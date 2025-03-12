@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 
 use crate::components::Navbar;
 use crate::views::{Account, Glossary, Home, Login, Signup};
+use crate::backend::learning_level::{get_level};
 
 mod backend;
 mod components;
@@ -27,7 +28,10 @@ enum Route {
     Signup {},
 
     #[route("/account")]
-    Account {}
+    Account {},
+
+    #[route("/learning")]
+    Learning {}
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -35,13 +39,14 @@ const MAIN_CSS: Asset = asset!("/assets/styling/main.css");
 const MAIN_SCSS: Asset = asset!("/assets/styling/custom.scss");
 
 fn main() {
+    //get_level().unwrap();
+
     dioxus::launch(App);
 }
 
 #[component]
 fn App() -> Element {
     // Build cool things ✌️
-
     rsx! {
         // Global app resources
         document::Link { rel: "icon", href: FAVICON }
@@ -52,4 +57,5 @@ fn App() -> Element {
             Router::<Route> {}
         }
     }
+
 }

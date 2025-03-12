@@ -58,6 +58,14 @@ pub fn Navbar() -> Element {
                             }
                         }
                         div {class: "nav-item",
+                            Link {
+                                to: Route::Learning{},
+                                // to: Route::Glossary{},
+                                class: "nav-link",
+                                "Learning"
+                            }
+                        }
+                        div {class: "nav-item",
                             a { class: "nav-link", id: "playground", "Playground" }
                         }
                     }
