@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::Navbar;
-use crate::views::{Account, Glossary, Home, Login, Signup};
+use crate::views::{Account, Glossary, Home, Login, Signup, Learning};
 use crate::backend::learning_level::{get_level};
 
 mod backend;
