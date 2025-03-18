@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::backend::learning_level::get_level;
+use crate::backend::learning_level::*;
 use crate::components::Navbar;
 use crate::views::{Account, Glossary, Home, Learning, Login, Signup};
 
@@ -36,7 +36,8 @@ const MAIN_CSS: Asset = asset!("/assets/styling/main.css");
 const MAIN_SCSS: Asset = asset!("/assets/styling/custom.scss");
 
 fn main() {
-    //get_level().unwrap();
+    let lvl = get_level(1, 1).unwrap();
+    println!("Deserialized level from main: {:?}", lvl.clone());
 
     dioxus::launch(App);
 }
