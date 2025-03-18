@@ -13,6 +13,8 @@ serde_json = "1.0.136"
 surrealdb = "2.1.4"
 thiserror = "2.0.11"
 regex = "1"
+scraper = "0.23.1"
+ego-tree = "0.10.0"
 
 [features]
 default = []

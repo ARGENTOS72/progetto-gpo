@@ -5,6 +5,7 @@ use dioxus::{html::link, prelude::*};
 
 #[component]
 pub fn Navbar() -> Element {
+    let ccc : Option<String> = None;
     rsx! {
         // document::Link { rel: "stylesheet", href: NAVBAR_CSS }
 
@@ -48,8 +49,7 @@ pub fn Navbar() -> Element {
                             //     "Glossary"
                             // }
                             Link {
-                                to: Route::Login{},
-                                // to: Route::Glossary{},
+                                to: Route::Glossary{chapter: None },//TEMP
                                 class: "nav-link",
                                 "Glossary"
                             }

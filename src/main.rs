@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components::Navbar;
-use crate::views::{Home, Login, Signup, Account};
+use crate::views::{Home, Login, Signup, Account, Glossary};
 
 mod backend;
 mod components;
@@ -15,10 +15,10 @@ enum Route {
     #[route("/")]
     Home {},
 
-    // #[route("/glossary")]
-    // Glossary {
-    //     chapter: Option<String>,
-    // },
+    #[route("/glossary")]
+    Glossary {
+        chapter: Option<String>,
+    },
 
     #[route("/login")]
     Login {},
