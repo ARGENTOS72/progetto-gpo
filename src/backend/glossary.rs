@@ -241,3 +241,53 @@ impl Eq for SubChapter {}
 
 //     Ok(contents)
 // }
+//
+
+// fn convert_node(node: NodeRef) -> VNode {
+//     match node.value() {
+//         Node::Text(text_node) => {
+//             let text = text_node.text.to_string();
+//             // VNode::text(VText::new(text)) cazzo palle non funziona na minchia
+//             //N.B.: dovrebbe fare testo
+//             VNode::text(text)
+
+//         }
+
+//         println!("NIFFA");
+
+//         Node::Element(element_node) => {
+//             let tag_name = element_node.name.local.as_ref();
+
+//             //iteratore bambini rapiti
+//             let children_vnodes: Vec<VNode> = node.children().map(convert_node).collect();
+
+//             match tag_name {
+//                 "a" => {
+//                     let href = element_node.attr("href").unwrap_or("#");
+
+//                     rsx! {
+//                         a {
+//                             href: "{href}",
+//                             style: "color: red;",
+//                             children_vnodes
+//                         }
+//                     }
+//                 }
+
+//                 //possibili tag
+//                 "p" => rsx! { p { children_vnodes } },
+//                 "h1" => rsx! { h1 { children_vnodes } },
+//                 "ul" => rsx! { ul { children_vnodes } },
+//                 "li" => rsx! { li { children_vnodes } },
+//                 "div" => rsx! { div { children_vnodes } },
+//                 "strong" => rsx! { strong { children_vnodes } },
+//                 "em" => rsx! { em { children_vnodes } },
+
+//                 //altra merda che ne so
+//                 _ => rsx! { div { children_vnodes } },
+//             }
+//         }
+
+//         _ => VNode::Text(VText::new(String::new())), //no nigga comments
+//     }
+// }

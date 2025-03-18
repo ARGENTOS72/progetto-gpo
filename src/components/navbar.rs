@@ -6,6 +6,7 @@ const CSS: Asset = asset!("/assets/styling/navbar.css");
 #[component]
 pub fn Navbar() -> Element {
     rsx! {
+
         link { rel: "stylesheet", href: CSS }
 
         nav { class: "navbar navbar-expand-sm bg-body-tertiary border-bottom border-body sticky-top",

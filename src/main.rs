@@ -9,16 +9,13 @@ mod error;
 mod views;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
-#[rustfmt::skip]
 enum Route {
     #[layout(Navbar)]
     #[route("/")]
     Home {},
 
     #[route("/glossary")]
-    Glossary {
-        chapter: Option<String>,
-    },
+    Glossary { chapter: Option<String> },
 
     #[route("/login")]
     Login {},
@@ -27,7 +24,7 @@ enum Route {
     Signup {},
 
     #[route("/account")]
-    Account {}
+    Account {},
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
