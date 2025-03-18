@@ -1,18 +1,18 @@
 use dioxus::prelude::*;
 
-// use crate::backend::glossary::{get_sub_chapters, SubChapter};
+use crate::backend::glossary::Chapter;
+
+fn check_collapsed<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
+    if chapter != current_chapter {
+        "collapsed"
+    } else {
+        ""
+    }
+}
 
 #[component]
-pub fn GlossaryNavigation(chapters: Vec<String>, sub_chapters: Vec<String>) -> Element {
-    // let sub_chapters = use_signal(|| {
-    //     let mut sub_chapters = Vec::new();
-
-    //     for chapter in &chapters {
-    //         sub_chapters.push(get_sub_chapters(chapter));
-    //     }
-
-    //     sub_chapters
-    // });
+pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: String) -> Element {
+    let current_chapter = current_chapter.split_once(".html").unwrap().0;
 
     rsx! {
         div {
@@ -29,20 +29,19 @@ pub fn GlossaryNavigation(chapters: Vec<String>, sub_chapters: Vec<String>) -> E
                     div {
                         class: "accordion-item",
 
-                        // "v-for": "(chapterTitle, index) in chapters",
-                        // for(chapterTitle, index) in chapters {//TODO for
+                        for chapter in chapters {
                             h2 {
                                 class: "accordion-header",
-                                id: "'heading' + index",
+                                id: "heading-{chapter.get_title()}",
                                 // onclick: |_| getSubChapter(chapterTitle, index),
-                                class: "accordion-button",
+                                class: "accordion-button {check_collapsed(chapter.get_title(), current_chapter)}",
                                 // :class="{ collapsed: index != 0 }",
-                                // type: "button",
-                                // data-bs-toggle: "collapse",
-                                // v-bind:data-bs-target="'#collapse' + index",
-                                // aria-expanded="true",
-                                // v-bind:aria-controls="'collapse' + index"
-                                // {{ chapterTitle }}
+                                "type": "button",
+                                "data-bs-toggle": "collapse",
+                                "data-bs-target": "#collapse-{chapter.get_title()}",
+                                "aria-expanded": "true",
+                                "aria-controls": "collapse-{chapter.get_title()}",
+                                "{chapter.get_title()}",
                             }
                             div {
                                 // v-bind:id="'collapse' + index",
@@ -64,7 +63,7 @@ pub fn GlossaryNavigation(chapters: Vec<String>, sub_chapters: Vec<String>) -> E
                                     }
                                 }
                             }
-                        // }
+                        }
                     }
                 }
             }

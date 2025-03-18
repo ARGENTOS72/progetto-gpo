@@ -1,14 +1,14 @@
 use crate::Route;
-use dioxus::{html::link, prelude::*};
+use dioxus::prelude::*;
 
-// const NAVBAR_CSS: Asset = asset!("/assets/styling/navbar.css");
+const CSS: Asset = asset!("/assets/styling/navbar.css");
 
 #[component]
 pub fn Navbar() -> Element {
     let ccc : Option<String> = None;
     rsx! {
-        // document::Link { rel: "stylesheet", href: NAVBAR_CSS }
 
+        link { rel: "stylesheet", href: CSS }
 
         nav { class: "navbar navbar-expand-sm bg-body-tertiary border-bottom border-body sticky-top",
             div { class: "container-fluid",
@@ -39,19 +39,31 @@ pub fn Navbar() -> Element {
                     id: "navbarTogglerDemo01",
                     div {
                         class: "navbar-nav me-auto mb-2 mb-lg-0",
-                        div {class: "nav-item",
+                        div {
+                            class: "nav-item",
                             a { class: "nav-link", id: "learning", "Learning" }
                         }
-                        div {class: "nav-item",
-                            // Link {
-                            //     to: Route::Glossary{},
-                            //     class: "nav-link",
-                            //     "Glossary"
-                            // }
+                        div {
+                            class: "nav-item",
+                            Link {
+                                to: Route::Glossary{
+                                    chapter: None,
+                                },
+                                class: "nav-link",
+                                "Glossary"
+                            }
                             Link {
                                 to: Route::Glossary{chapter: None },//TEMP
                                 class: "nav-link",
                                 "Glossary"
+                            }
+                        }
+                        div {class: "nav-item",
+                            Link {
+                                to: Route::Learning{},
+                                // to: Route::Glossary{},
+                                class: "nav-link",
+                                "Learning"
                             }
                         }
                         div {class: "nav-item",
