@@ -267,8 +267,6 @@ impl Eq for SubChapter {}
 // }
 
 pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
-    print!("1- function 'get_glossary_file_rsxed' start!\n");
-
     let file = File::open(
         Path::new(GLOSSARY_PATH)
             .join(file_name)
@@ -280,18 +278,13 @@ pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
     
     file_reader.read_to_string(&mut html)?;
 
-    print!("2- html readed!\n");
-    print!("{html}");
-
     //Manipulate html with scarper
     let parsed_html = Html::parse_fragment(&html);
     let nodes = parsed_html.tree.root().children();
-    
-    print!("3- start converting html string to VNode!\n");
 
     let children_vnodes: Vec<VNode> = nodes.map(convert_node).collect();//all html file into Vec<VNode>
 
-    //Wrap in a parent container
+    //wrap in a parent container
     rsx! {
         div {
             {children_vnodes.into_iter()}
@@ -304,10 +297,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
     match node.value() {
         Node::Text(text_node) => {
             let text = text_node.text.to_string();
-            // VNode::text(VText::new(text)) cazzo palle non funziona na minchia
-            //N.B.: dovrebbe fare testo
-            // VNode::text(text)
-            //VNode::new(text_node).unwrap();
+            
             return rsx!{" {text} "}.unwrap();
         }
 
@@ -334,7 +324,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                         None => {
                             rsx! {
                                 a {
-                                    href: "{raw_href}",//need to be changed / handled
+                                    href: "{raw_href}",
                                     style: "color: red;",
                                     {children_vnodes.into_iter()}
                                 }
@@ -345,26 +335,30 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                 }
 
                 //acceptable tag
-                "p" | "h1" | "ul" | "li" | "div" | "strong" | "em" => {
-                    rsx! {
-                        {tag_name} {children_vnodes.into_iter()}
-                    }.unwrap()
-                }
-                // "p" => rsx! { {tag_name} { children_vnodes } }.unwrap(),
-                // "h1" => rsx! { h1 { children_vnodes } },
-                // "ul" => rsx! { ul { children_vnodes } },
-                // "li" => rsx! { li { children_vnodes } },
-                // "div" => rsx! { div { children_vnodes } },
-                // "strong" => rsx! { strong { children_vnodes } },
-                // "em" => rsx! { em { children_vnodes } },
+                "p" => rsx! { p { {children_vnodes.into_iter()} } }.unwrap(),
+                "h1" => rsx! { h1 { {children_vnodes.into_iter()} } }.unwrap(),
+                "ul" => rsx! { ul { {children_vnodes.into_iter()} } }.unwrap(),
+                "ol" => rsx! { ol { {children_vnodes.into_iter()} } }.unwrap(),
+                "li" => rsx! { li { {children_vnodes.into_iter()} } }.unwrap(),
+                "div" => rsx! { div { {children_vnodes.into_iter()} } }.unwrap(),
+                "strong" => rsx! { strong { {children_vnodes.into_iter()} } }.unwrap(),
+                "em" => rsx! { em { {children_vnodes.into_iter()} } }.unwrap(),
+                "code" => rsx! { code { {children_vnodes.into_iter()} } }.unwrap(),
+                "blockquote" => rsx! { blockquote { {children_vnodes.into_iter()} } }.unwrap(),
+                "button" => rsx! { button { {children_vnodes.into_iter()} } }.unwrap(),
+                "caption" => rsx! { caption { {children_vnodes.into_iter()} } }.unwrap(),
+                "details" => rsx! { details { {children_vnodes.into_iter()} } }.unwrap(),
+                "summary" => rsx! { summary { {children_vnodes.into_iter()} } }.unwrap(),
+                "fieldset" => rsx! { fieldset { {children_vnodes.into_iter()} } }.unwrap(),
+                "br" => rsx! { br {} }.unwrap(), 
+                "hr" => rsx! { hr {} }.unwrap(),
 
-                //altra merda che ne so
+                //other: default as div
                 _ => rsx! { div { {children_vnodes.into_iter()} } }.unwrap(),
             }
         }
 
         _ => VNode::empty().unwrap(),//comments match: exclude them
-        // _ => VNode::Text(VText::new(String::new())), //no nigga comments
     }
 }
 
@@ -383,66 +377,4 @@ fn to_route(route: &str) -> Option<Route> {
     } else {
         None
     }
-    // match route {
-    //     "/" | "/home" => Some(Route::Home {}),
-    //     "/glossary" => Some(Route::Glossary {}),
-    //     "/login" => Some(Route::Login {} ),
-    //     "/signup" => Some(Route::Signup {}),
-    //     "/account" => Some(Route::Account {}),
-    //     _ => None,
-    // }
 }
-
-/*
-fn convert_node<'a>(cx: Scope<'a>, node: &scraper::node::NodeRef) -> Element<'a> {
-    match node.value() {
-        Node::Text(text) => {
-            cx.render(rsx! { "{text}" })
-        }
-        Node::Element(element) => {
-            let tag = element.name();
-            let children = node.children().map(|child| convert_node(cx, &child)).collect::<Vec<_>>();
-
-            match tag {
-                "a" => {
-                    // Manually handle <a> tag: e.g., transform href or make it an internal navigation link.
-                    let href = element.attr("href").unwrap_or("#");
-                    cx.render(rsx! {
-                        a {
-                            href: "{href}", // You can modify this href as needed
-                            style: "color: red;", // Example of adding custom style
-                            children
-                        }
-                    })
-                }
-                "p" => cx.render(rsx! { p { children } }),
-                "h1" => cx.render(rsx! { h1 { children } }),
-                "ul" => cx.render(rsx! { ul { children } }),
-                "li" => cx.render(rsx! { li { children } }),
-                "div" => cx.render(rsx! { div { children } }),
-                "strong" => cx.render(rsx! { strong { children } }),
-                "em" => cx.render(rsx! { em { children } }),
-                _ => {
-                    // Default handler for any unknown tags
-                    cx.render(rsx! { div { children } })
-                }
-            }
-        }
-        _ => cx.render(rsx! { "" }), // Ignore comments or other nodes
-    }
-}
-
-*/
-
-/*
-//fin?
-pub fn file_get_contents(file_name: &str) -> Result<String> {
-    let file = File::open(Path::new(GLOSSARY_PATH).join(file_name).with_extension("html"))?;
-    let mut contents = String::new();
-    let mut reader = BufReader::new(file);
-
-    reader.read_to_string(&mut contents)?;
-
-    Ok(contents)
-}
-*/
