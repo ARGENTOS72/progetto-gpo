@@ -41,10 +41,6 @@ pub fn Navbar() -> Element {
                         class: "navbar-nav me-auto mb-2 mb-lg-0",
                         div {
                             class: "nav-item",
-                            a { class: "nav-link", id: "learning", "Learning" }
-                        }
-                        div {
-                            class: "nav-item",
                             Link {
                                 to: Route::Glossary{
                                     chapter: None,
