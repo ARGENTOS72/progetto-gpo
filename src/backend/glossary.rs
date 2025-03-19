@@ -82,6 +82,7 @@ pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
 
     Ok(chapters)
 }
+*/
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Chapter {
@@ -238,33 +239,32 @@ impl Eq for SubChapter {}
 //     Element { tag: String, children: Vec<GNode> },
 //     Text(String),
 // }
-*/
 
-pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
-    print!("1- function 'get_glossary_file_rsxed' start!\n");
 
-    let file = File::open(
-        Path::new(GLOSSARY_PATH)
-            .join(file_name)
-            .with_extension("html"),
-    )?;
+// pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
+//     print!("1- function 'get_glossary_file_rsxed' start!\n");
 
-    let file_reader = BufReader::new(file);
+//     let file = File::open(
+//         Path::new(GLOSSARY_PATH)
+//             .join(file_name)
+//             .with_extension("html"),
+//     )?;
 
-    let subchapters: Vec<SubChapter> = {
-        let value: Value = serde_json::from_reader(file_reader)?;
+//     let file_reader = BufReader::new(file);
 
-        serde_json::from_value(value["sub_chapters"].clone())?
-    };
+//     let subchapters: Vec<SubChapter> = {
+//         let value: Value = serde_json::from_reader(file_reader)?;
 
-    Ok(subchapters)
-}
+//         serde_json::from_value(value["sub_chapters"].clone())?
+//     };
+
+//     Ok(subchapters)
+// }
 
 // pub enum GNode {
 //     Element { tag: String, children: Vec<GNode> },
 //     Text(String),
 // }
-*/
 
 pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
     print!("1- function 'get_glossary_file_rsxed' start!\n");

@@ -52,11 +52,6 @@ pub fn Navbar() -> Element {
                                 class: "nav-link",
                                 "Glossary"
                             }
-                            Link {
-                                to: Route::Glossary{chapter: None },//TEMP
-                                class: "nav-link",
-                                "Glossary"
-                            }
                         }
                         div {class: "nav-item",
                             Link {

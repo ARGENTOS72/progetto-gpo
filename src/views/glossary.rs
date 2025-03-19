@@ -1,6 +1,8 @@
 // use crate::{backend::glossary::get_chapters_name, components::GlossaryNavigation};
 use dioxus::prelude::*;
 
+use crate::backend::glossary::get_glossary_file_rsxed;
+
 // const GLOSSARY_CSS: Asset = asset!("/assets/styling/[...]");
 // fn convert_to_dioxus_links(raw_html: String) -> Vec<Element> {
 //     let mut elements: Vec<Element> = Vec::new();
@@ -40,6 +42,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Glossary(chapter: Option<String>) -> Element {
+    let file : String = String::from("index");
     // let chapter = chapter.unwrap_or_else(|| "ch00-00-introduction.html".to_string());
     // let cloned_chapter = chapter.clone();
 
@@ -66,6 +69,6 @@ pub fn Glossary(chapter: Option<String>) -> Element {
     // }
 
     rsx! {
-        h1 { "FINNNNN!!!" }
+        {get_glossary_file_rsxed("index")}
     }
 }
