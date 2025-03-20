@@ -46,7 +46,7 @@ pub fn Navbar() -> Element {
                             class: "nav-item",
                             Link {
                                 to: Route::Glossary{
-                                    chapter: None,
+                                    chapter: "ch00-00-introduction.html".to_string(),
                                 },
                                 class: "nav-link",
                                 "Glossary"

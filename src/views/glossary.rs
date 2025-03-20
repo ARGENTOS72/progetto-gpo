@@ -1,4 +1,4 @@
-// use crate::{backend::glossary::get_chapters_name, components::GlossaryNavigation};
+use crate::{backend::glossary::get_chapters_name, components::GlossaryNavigation};
 use dioxus::prelude::*;
 
 // const GLOSSARY_CSS: Asset = asset!("/assets/styling/[...]");
@@ -39,33 +39,21 @@ use dioxus::prelude::*;
 // }
 
 #[component]
-pub fn Glossary(chapter: Option<String>) -> Element {
-    // let chapter = chapter.unwrap_or_else(|| "ch00-00-introduction.html".to_string());
-    // let cloned_chapter = chapter.clone();
-
-    // // let test = use_server_future(test);
-
-    // let chapters = use_server_future(move || {
-    //     let chapter_cloned = cloned_chapter.clone();
-    //     async move { get_chapters_name(chapter_cloned).await }
-    // })?;
-
-    // rsx! {
-    //     GlossaryNavigation {
-    //         chapters: chapters.value()().unwrap().unwrap(),
-    //         current_chapter: chapter,
-    //     }
-    //     div {
-    //         class: "p-4",
-    //         style: "width: 75%; overflow: auto;",
-
-    //         h1 {
-    //             class: "mb-3",
-    //         }
-    //     }
-    // }
+pub fn Glossary(chapter: String) -> Element {
+    let chapters = use_server_future(move || async move { get_chapters_name().await })?;
 
     rsx! {
-        h1 { "FINNNNN!!!" }
+        GlossaryNavigation {
+            chapters: chapters.value()().unwrap().unwrap(),
+            current_chapter: chapter,
+        }
+        div {
+            class: "p-4",
+            style: "width: 75%; overflow: auto;",
+
+            h1 {
+                class: "mb-3",
+            }
+        }
     }
 }

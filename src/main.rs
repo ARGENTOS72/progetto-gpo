@@ -16,7 +16,7 @@ enum Route {
     Home {},
 
     #[route("/glossary")]
-    Glossary { chapter: Option<String> },
+    Glossary { chapter: String },
 
     #[route("/login")]
     Login {},

@@ -6,6 +6,7 @@ use std::{
     fs::{read_to_string, File},
     io::BufReader,
     path::Path,
+    sync::{Arc, Mutex},
 };
 
 use crate::error::Error;
@@ -13,7 +14,7 @@ use crate::error::Error;
 const GLOSSARY_PATH: &str = "./glossary";
 
 #[server]
-pub async fn get_chapters_name(load_chapter: String) -> Result<Vec<Chapter>, ServerFnError> {
+pub async fn get_chapters_name() -> Result<Vec<Chapter>, ServerFnError> {
     let reading_dir = std::fs::read_dir(GLOSSARY_PATH)?;
 
     let mut chapters = Vec::new();
@@ -26,51 +27,34 @@ pub async fn get_chapters_name(load_chapter: String) -> Result<Vec<Chapter>, Ser
             Regex::new(r"^ch(?<first_digit>\d{2})-(?<second_digit>\d{2})-[a-zA-Z0-9-]+\.html$")
                 .unwrap();
 
-        let mut index_load = 0;
-
         if re.is_match(file_name) {
-            let (Some(captures), Some(load_chapter_capture)) =
-                (re.captures(file_name), re.captures(&load_chapter))
-            else {
+            let Some(captures) = re.captures(file_name) else {
                 continue;
             };
 
-            if &captures["second_digit"] != "00"
-                && &captures["first_digit"] != &load_chapter_capture["first_digit"]
-            {
-                continue;
-            }
+            if &captures["first_digit"] == "00" {
+                let chapter = Chapter::new(
+                    file_name.split_once(".html").unwrap().0.to_string(),
+                    read_to_string(file.path())?,
+                    Vec::new(),
+                );
 
-            if file.path().is_file() && re.is_match(file_name) {
-                if file.file_name().to_str().unwrap() == load_chapter {
-                    let chapter = Chapter::new(
-                        file_name.split_once(".html").unwrap().0.to_string(),
-                        read_to_string(file.path())?,
-                        Vec::new(),
-                    );
+                chapters.push(chapter);
+            } else {
+                let index = chapters
+                    .iter()
+                    .position(|chapter| &chapter.title == file_name.split_once(".html").unwrap().0)
+                    .unwrap();
 
-                    chapters.push(chapter);
+                let chapter = chapters.get_mut(index).unwrap();
 
-                    index_load = chapters.len() - 1;
-                } else if &captures["first_digit"] == &load_chapter_capture["first_digit"] {
-                    let chapter = chapters.get_mut(index_load).unwrap();
+                let sub_chapter = SubChapter::new(
+                    file_name.split_once(".html").unwrap().0.to_string(),
+                    read_to_string(file.path())?,
+                );
 
-                    let sub_chapter = SubChapter::new(
-                        file_name.split_once(".html").unwrap().0.to_string(),
-                        read_to_string(file.path())?,
-                    );
-
-                    chapter.sub_chapters.push(sub_chapter);
-                    chapter.sub_chapters.sort();
-                } else {
-                    let chapter = Chapter::new(
-                        file_name.split_once(".html").unwrap().0.to_string(),
-                        String::new(),
-                        Vec::new(),
-                    );
-
-                    chapters.push(chapter);
-                }
+                chapter.sub_chapters.push(sub_chapter);
+                chapter.sub_chapters.sort();
             }
         }
     }
@@ -79,6 +63,54 @@ pub async fn get_chapters_name(load_chapter: String) -> Result<Vec<Chapter>, Ser
 
     Ok(chapters)
 }
+
+// #[server]
+// pub async fn load_sub_chapters(
+//     mut chapters: Vec<Chapter>,
+// ) -> Result<Vec<Chapter>, ServerFnError> {
+//     let re = Regex::new(r"^ch(?<first_digit>\d{2})-(?<second_digit>\d{2})-[a-zA-Z0-9-]+\.html$")
+//         .unwrap();
+
+//     let reading_dir = std::fs::read_dir(GLOSSARY_PATH)?;
+
+//     for file in reading_dir.into_iter().flatten() {
+//         let file_name = file.file_name().clone();
+//         let file_name = file_name.to_str().unwrap();
+
+//         if re.is_match(&chapter_name) {
+//             let (Some(captures), Some(file_name_captures)) =
+//                 (re.captures(&chapter_name), re.captures(file_name))
+//             else {
+//                 return Err(Error::Custom("Couldn't match the file name".to_string()).into());
+//             };
+
+//             if captures["first_digit"] != file_name_captures["first_digit"] {
+//                 continue;
+//             }
+
+//             let index = chapters
+//                 .iter()
+//                 .position(|chapter| chapter.get_title() == chapter_name)
+//                 .unwrap();
+
+//             let chapter = chapters.get_mut(index).unwrap();
+
+//             if file_name_captures["second_digit"] == captures["first_digit"] {
+//                 chapter.content = read_to_string(file.path())?;
+//             } else {
+//                 let sub_chapter = SubChapter::new(
+//                     file_name.split_once(".html").unwrap().0.to_string(),
+//                     read_to_string(file.path())?,
+//                 );
+
+//                 chapter.sub_chapters.push(sub_chapter);
+//                 chapter.sub_chapters.sort();
+//             }
+//         }
+//     }
+
+//     Ok(chapters)
+// }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Chapter {
