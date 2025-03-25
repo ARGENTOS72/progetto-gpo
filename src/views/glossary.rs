@@ -1,6 +1,8 @@
 use crate::{backend::glossary::get_chapters_name, components::GlossaryNavigation};
 use dioxus::prelude::*;
 
+use crate::backend::glossary::get_glossary_file_rsxed;
+
 // const GLOSSARY_CSS: Asset = asset!("/assets/styling/[...]");
 // fn convert_to_dioxus_links(raw_html: String) -> Vec<Element> {
 //     let mut elements: Vec<Element> = Vec::new();
