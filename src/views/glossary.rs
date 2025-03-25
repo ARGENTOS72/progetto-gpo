@@ -1,4 +1,4 @@
-use crate::{backend::glossary::get_chapters_name, components::GlossaryNavigation};
+use crate::{backend::glossary::get_chapters, components::GlossaryNavigation};
 use dioxus::prelude::*;
 
 use crate::backend::glossary::get_glossary_file_rsxed;
@@ -42,13 +42,15 @@ use crate::backend::glossary::get_glossary_file_rsxed;
 
 #[component]
 pub fn Glossary(chapter: String) -> Element {
-    let chapters = use_server_future(move || async move { get_chapters_name().await })?;
+    let chapters = use_server_future(move || async move { get_chapters().await })?;
+
+    dbg!(chapters.value());
 
     rsx! {
-        GlossaryNavigation {
-            chapters: chapters.value()().unwrap().unwrap(),
-            current_chapter: chapter,
-        }
+        // GlossaryNavigation {
+        //     chapters: chapters.value()().unwrap().unwrap(),
+        //     current_chapter: chapter,
+        // }
         div {
             class: "p-4",
             style: "width: 75%; overflow: auto;",

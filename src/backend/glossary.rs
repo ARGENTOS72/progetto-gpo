@@ -1,35 +1,34 @@
 #![allow(unused)]
 
-use dioxus::dioxus_core::VText;
-use dioxus::prelude::*;
-use scraper::node::Element;
+use dioxus::{dioxus_core::VText, prelude::*};
+use ego_tree::NodeRef;
+use regex::Regex;
+use scraper::{node::Element, Html, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
     fs::{read_to_string, File},
-    io::BufReader,
+    io::{self, BufReader, Read},
     path::Path,
     sync::{Arc, Mutex},
 };
-use std::io::{self, Read};
-use std::{fs::File, io::BufReader, path::Path};
-use scraper::{Html, Node};
-use ego_tree::NodeRef;
-use crate::Route;
+use log::debug;
 
-use crate::error::Error;
+use crate::{error::Error, Route};
 
 const GLOSSARY_PATH: &str = "./glossary";
 
-/*
-pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
+#[server]
+pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
     let reading_dir = std::fs::read_dir(GLOSSARY_PATH)?;
 
     let mut chapters = Vec::new();
 
-    for file in reading_dir.into_iter().flatten() {
+    for file in reading_dir.into_iter().flatten()
         let file_name = file.file_name().clone();
         let file_name = file_name.to_str().unwrap();
+
+        debug!("Leggendo ora {}", file_name);
 
         let re =
             Regex::new(r"^ch(?<first_digit>\d{2})-(?<second_digit>\d{2})-[a-zA-Z0-9-]+\.html$")
@@ -40,7 +39,7 @@ pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
                 continue;
             };
 
-            if &captures["first_digit"] == "00" {
+            if &captures["second_digit"] == "00" {
                 let chapter = Chapter::new(
                     file_name.split_once(".html").unwrap().0.to_string(),
                     read_to_string(file.path())?,
@@ -49,20 +48,27 @@ pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
 
                 chapters.push(chapter);
             } else {
-                let index = chapters
-                    .iter()
-                    .position(|chapter| &chapter.title == file_name.split_once(".html").unwrap().0)
-                    .unwrap();
+                let index = chapters.iter().position(|chapter| {
+                    if let Some(captures_chapter) =
+                        re.captures(&(chapter.get_title().to_string() + ".html"))
+                    {
+                        captures_chapter["first_digit"] == captures["first_digit"]
+                    } else {
+                        false
+                    }
+                });
 
-                let chapter = chapters.get_mut(index).unwrap();
+                if let Some(index) = index {
+                    let chapter = chapters.get_mut(index).unwrap();
 
-                let sub_chapter = SubChapter::new(
-                    file_name.split_once(".html").unwrap().0.to_string(),
-                    read_to_string(file.path())?,
-                );
+                    let sub_chapter = SubChapter::new(
+                        file_name.split_once(".html").unwrap().0.to_string(),
+                        read_to_string(file.path())?,
+                    );
 
-                chapter.sub_chapters.push(sub_chapter);
-                chapter.sub_chapters.sort();
+                    chapter.sub_chapters.push(sub_chapter);
+                    chapter.sub_chapters.sort();
+                };
             }
         }
     }
@@ -71,7 +77,6 @@ pub fn get_chapters() -> Result<Vec<String>, ServerFnError> {
 
     Ok(chapters)
 }
-*/
 
 // #[server]
 // pub async fn load_sub_chapters(
@@ -277,7 +282,6 @@ impl Eq for SubChapter {}
 //     Text(String),
 // }
 
-
 // pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
 //     print!("1- function 'get_glossary_file_rsxed' start!\n");
 
@@ -312,14 +316,14 @@ pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
 
     let mut file_reader = BufReader::new(file);
     let mut html = String::new();
-    
+
     file_reader.read_to_string(&mut html)?;
 
     //Manipulate html with scarper
     let parsed_html = Html::parse_fragment(&html);
     let nodes = parsed_html.tree.root().children();
 
-    let children_vnodes: Vec<VNode> = nodes.map(convert_node).collect();//all html file into Vec<VNode>
+    let children_vnodes: Vec<VNode> = nodes.map(convert_node).collect(); //all html file into Vec<VNode>
 
     //wrap in a parent container
     rsx! {
@@ -329,13 +333,12 @@ pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
     }
 }
 
-
 fn convert_node(node: NodeRef<'_, Node>) -> VNode {
     match node.value() {
         Node::Text(text_node) => {
             let text = text_node.text.to_string();
-            
-            return rsx!{" {text} "}.unwrap();
+
+            return rsx! {" {text} "}.unwrap();
         }
 
         Node::Element(element_node) => {
@@ -347,28 +350,25 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
             match tag_name {
                 "a" => {
                     let raw_href = element_node.attr("href").unwrap_or("#");
-                    
+
                     match to_route(raw_href) {
-                        Some(route) => {
-                            rsx! {
-                                Link {
-                                    to: route,
-                                    style: "color: red;",
-                                    {children_vnodes.into_iter()}
-                                }
-                            }.unwrap()
-                        },
-                        None => {
-                            rsx! {
-                                a {
-                                    href: "{raw_href}",
-                                    style: "color: red;",
-                                    {children_vnodes.into_iter()}
-                                }
-                            }.unwrap()
-                        },
+                        Some(route) => rsx! {
+                            Link {
+                                to: route,
+                                style: "color: red;",
+                                {children_vnodes.into_iter()}
+                            }
+                        }
+                        .unwrap(),
+                        None => rsx! {
+                            a {
+                                href: "{raw_href}",
+                                style: "color: red;",
+                                {children_vnodes.into_iter()}
+                            }
+                        }
+                        .unwrap(),
                     }
-                    
                 }
 
                 //acceptable tag
@@ -387,7 +387,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                 "details" => rsx! { details { {children_vnodes.into_iter()} } }.unwrap(),
                 "summary" => rsx! { summary { {children_vnodes.into_iter()} } }.unwrap(),
                 "fieldset" => rsx! { fieldset { {children_vnodes.into_iter()} } }.unwrap(),
-                "br" => rsx! { br {} }.unwrap(), 
+                "br" => rsx! { br {} }.unwrap(),
                 "hr" => rsx! { hr {} }.unwrap(),
 
                 //other: default as div
@@ -395,14 +395,14 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
             }
         }
 
-        _ => VNode::empty().unwrap(),//comments match: exclude them
+        _ => VNode::empty().unwrap(), //comments match: exclude them
     }
 }
 
 fn to_route(route: &str) -> Option<Route> {
     if route.starts_with("/glossary") {
-        let ch : Option<String> = route.get(10..).map(String::from);//take out ONLY '/glossary#'
-        Some(Route::Glossary {chapter: ch})
+        let ch = route.get(10..).map(String::from).unwrap(); //take out ONLY '/glossary#'
+        Some(Route::Glossary { chapter: ch })
     } else if route.starts_with("/login") {
         Some(Route::Login {})
     } else if route.starts_with("/signup") {

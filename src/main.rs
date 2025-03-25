@@ -36,6 +36,9 @@ const MAIN_CSS: Asset = asset!("/assets/styling/main.css");
 const MAIN_SCSS: Asset = asset!("/assets/styling/custom.scss");
 
 fn main() {
+    env_logger::Builder::new()
+        .filter_level(log::LevelFilter::max())
+        .init();
     let lvl = get_level(1, 1).unwrap();
     println!("Deserialized level from main: {:?}", lvl.clone());
 
