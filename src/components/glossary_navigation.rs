@@ -27,9 +27,7 @@ fn check_active<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
 }
 
 #[component]
-pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: String) -> Element {
-    let current_chapter = current_chapter.split_once(".html").unwrap().0;
-
+pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: Signal<String>) -> Element {
     rsx! {
         div {
             class: "d-flex", style: "height: 100%;",
@@ -49,22 +47,25 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: String) -> El
                             h2 {
                                 class: "accordion-header",
                                 id: "heading-{chapter.get_title()}",
-                                class: "accordion-button {check_collapsed(chapter.get_title(), current_chapter)}",
+                                class: "accordion-button {check_collapsed(chapter.get_title(), &current_chapter())}",
                                 "type": "button",
                                 "data-bs-toggle": "collapse",
                                 "data-bs-target": "#collapse-{chapter.get_title()}",
                                 "aria-expanded": "true",
                                 "aria-controls": "collapse-{chapter.get_title()}",
-                                Link {
-                                    to: Route::Glossary {
-                                        chapter: chapter.get_title().to_string() + ".html",
-                                    },
-                                    "{chapter.get_title()}"
+                                onclick: {
+                                    let clone_chapter = chapter.clone();
+                                    
+                                    move |_| {
+                                        if current_chapter() != clone_chapter.get_title() {
+                                            current_chapter.with_mut(|value| *value = clone_chapter.get_title().to_string());
+                                        }
+                                    }
                                 }
                             }
                             div {
                                 id: "collapse-{chapter.get_title()}",
-                                class: "accordion-collapse collapse {check_show(chapter.get_title(), current_chapter)}",
+                                class: "accordion-collapse collapse {check_show(chapter.get_title(), &current_chapter())}",
                                 "aria-labelledby": "#heading-{chapter.get_title()}",
                                 "data-bs-parent": "#chaptersAccordion"
                             }
@@ -74,10 +75,13 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: String) -> El
                                 ul {
                                     class: "list-unstyled ms-3",
 
-                                    li {
-                                        // class: "{ active: chapterSelected.subChapter == indexSubChapter && chapterSelected.chapter == index }",
-                                        // @click="chapterSelected = { chapter: chapterSelected.chapter, subChapter: indexSubChapter }",
-                                        // v-for="(subChapter, indexSubChapter) in subChaptersLoaded[index]\">{{ subChapter.title }}"
+                                    for sub_chapters in chapter.get_sub_chapters() {
+                                        li {
+                                            // class: "{ active: chapterSelected.subChapter == indexSubChapter && chapterSelected.chapter == index }",
+                                            // @click="chapterSelected = { chapter: chapterSelected.chapter, subChapter: indexSubChapter }",
+                                            // v-for="(subChapter, indexSubChapter) in subChaptersLoaded[index]\">{{ subChapter.title }}"
+                                            // onclick: 
+                                        }
                                     }
                                 }
                             }
