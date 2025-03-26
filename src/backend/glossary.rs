@@ -24,7 +24,7 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
 
     let mut chapters = Vec::new();
 
-    for file in reading_dir.into_iter().flatten()
+    for file in reading_dir.into_iter().flatten() {
         let file_name = file.file_name().clone();
         let file_name = file_name.to_str().unwrap();
 
