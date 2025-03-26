@@ -55,13 +55,14 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: Signal<String
                                 "aria-controls": "collapse-{chapter.get_title()}",
                                 onclick: {
                                     let clone_chapter = chapter.clone();
-                                    
+
                                     move |_| {
                                         if current_chapter() != clone_chapter.get_title() {
                                             current_chapter.with_mut(|value| *value = clone_chapter.get_title().to_string());
                                         }
                                     }
-                                }
+                                },
+                                "{chapter.get_title()}"
                             }
                             div {
                                 id: "collapse-{chapter.get_title()}",
@@ -80,7 +81,7 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: Signal<String
                                             // class: "{ active: chapterSelected.subChapter == indexSubChapter && chapterSelected.chapter == index }",
                                             // @click="chapterSelected = { chapter: chapterSelected.chapter, subChapter: indexSubChapter }",
                                             // v-for="(subChapter, indexSubChapter) in subChaptersLoaded[index]\">{{ subChapter.title }}"
-                                            // onclick: 
+                                            // onclick:
                                         }
                                     }
                                 }

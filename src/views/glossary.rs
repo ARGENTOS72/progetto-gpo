@@ -44,7 +44,7 @@ use crate::backend::glossary::get_glossary_file_rsxed;
 pub fn Glossary(chapter: Signal<String>) -> Element {
     let chapters = use_server_future(move || async move { get_chapters().await })?;
 
-    dbg!(chapters.value());
+    // dbg!(chapters.value());
 
     rsx! {
         GlossaryNavigation {

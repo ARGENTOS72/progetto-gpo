@@ -2,80 +2,94 @@
 
 use dioxus::{dioxus_core::VText, prelude::*};
 use ego_tree::NodeRef;
+use log::debug;
 use regex::Regex;
 use scraper::{node::Element, Html, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
+    collections::HashMap,
     fs::{read_to_string, File},
     io::{self, BufReader, Read},
     path::Path,
     sync::{Arc, Mutex},
 };
-use log::debug;
 
 use crate::{error::Error, Route};
 
 const GLOSSARY_PATH: &str = "./glossary";
 
-#[server]
+//#[server]
 pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
     let reading_dir = std::fs::read_dir(GLOSSARY_PATH)?;
 
-    let mut chapters = Vec::new();
+    let mut chapters: HashMap<String, Chapter> = HashMap::new();
 
     for file in reading_dir.into_iter().flatten() {
         let file_name = file.file_name().clone();
         let file_name = file_name.to_str().unwrap();
 
-        debug!("Leggendo ora {}", file_name);
+        // debug!("Leggendo ora {}", file_name);
 
-        let re =
-            Regex::new(r"^ch(?<first_digit>\d{2})-(?<second_digit>\d{2})-[a-zA-Z0-9-]+\.html$")
-                .unwrap();
+        let re = Regex::new(
+            r"^ch(?<first_digit>\d{2})-(?<second_digit>\d{2})-(?<title>[a-zA-Z0-9-]+)\.html$",
+        )
+        .unwrap();
 
         if re.is_match(file_name) {
             let Some(captures) = re.captures(file_name) else {
                 continue;
             };
 
-            if &captures["second_digit"] == "00" {
-                let chapter = Chapter::new(
-                    file_name.split_once(".html").unwrap().0.to_string(),
-                    read_to_string(file.path())?,
-                    Vec::new(),
+            let subchapter_unit = String::from(captures["second_digit"].to_string().clone());
+            let chapter_unit = String::from(captures["first_digit"].to_string().clone());
+
+            if subchapter_unit == "00" {
+                let title = format!(
+                    "{}. {}",
+                    chapter_unit,
+                    String::from(captures["title"].to_string().clone())
+                );
+                if let Some(mut ch_append) = chapters.get_mut(&chapter_unit) {
+                    ch_append.content = read_to_string(file.path())?;
+                    ch_append.title = title;
+                } else {
+                    chapters.insert(
+                        chapter_unit,
+                        Chapter::new(title, read_to_string(file.path())?, Vec::new()),
+                    );
+                }
+            } else {
+                let title = format!(
+                    "{}. {}",
+                    subchapter_unit,
+                    String::from(captures["title"].to_string().clone())
                 );
 
-                chapters.push(chapter);
-            } else {
-                let index = chapters.iter().position(|chapter| {
-                    if let Some(captures_chapter) =
-                        re.captures(&(chapter.get_title().to_string() + ".html"))
-                    {
-                        captures_chapter["first_digit"] == captures["first_digit"]
-                    } else {
-                        false
-                    }
-                });
-
-                if let Some(index) = index {
-                    let chapter = chapters.get_mut(index).unwrap();
-
-                    let sub_chapter = SubChapter::new(
-                        file_name.split_once(".html").unwrap().0.to_string(),
-                        read_to_string(file.path())?,
+                if (!chapters.contains_key(&chapter_unit)) {
+                    chapters.insert(
+                        chapter_unit.clone(),
+                        Chapter::new(
+                            format!("Capitolo {}", &chapter_unit),
+                            String::from(""),
+                            Vec::new(),
+                        ),
                     );
-
-                    chapter.sub_chapters.push(sub_chapter);
-                    chapter.sub_chapters.sort();
-                };
+                }
+                if let Some(mut ch_append) = chapters.get_mut(&chapter_unit) {
+                    ch_append
+                        .sub_chapters
+                        .push(SubChapter::new(title, read_to_string(file.path())?));
+                    ch_append.sub_chapters.sort();
+                }
             }
         }
     }
 
-    chapters.sort();
+    let mut ch_vec: Vec<Chapter> = chapters.into_values().collect();
+    ch_vec.sort();
 
-    Ok(chapters)
+    Ok(ch_vec)
 }
 
 // #[server]
@@ -150,7 +164,7 @@ impl Chapter {
         &self.content
     }
 
-    pub fn get_sub_chapters(&self) ->Vec<SubChapter> {
+    pub fn get_sub_chapters(&self) -> Vec<SubChapter> {
         self.sub_chapters.clone()
     }
 }
@@ -402,7 +416,9 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
 fn to_route(route: &str) -> Option<Route> {
     if route.starts_with("/glossary") {
         let ch = route.get(10..).map(String::from).unwrap(); //take out ONLY '/glossary#'
-        Some(Route::Glossary { chapter: ch })
+        Some(Route::Glossary {
+            chapter: use_signal(|| ch),
+        })
     } else if route.starts_with("/login") {
         Some(Route::Login {})
     } else if route.starts_with("/signup") {

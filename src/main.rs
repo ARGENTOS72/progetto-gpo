@@ -16,7 +16,7 @@ enum Route {
     Home {},
 
     #[route("/glossary")]
-    Glossary { chapter: String },
+    Glossary { chapter: Signal<String> },
 
     #[route("/login")]
     Login {},
@@ -42,8 +42,8 @@ fn main() {
         .filter_module("tungstenite", log::LevelFilter::Off)
         .filter_module("tracing", log::LevelFilter::Off)
         .init();
-    let lvl = get_level(1, 1).unwrap();
-    println!("Deserialized level from main: {:?}", lvl.clone());
+    // let lvl = get_level(1, 1).unwrap();
+    // println!("Deserialized level from main: {:?}", lvl.clone());
 
     dioxus::launch(App);
 }
