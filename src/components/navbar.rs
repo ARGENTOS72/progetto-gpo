@@ -43,7 +43,7 @@ pub fn Navbar() -> Element {
                             class: "nav-item",
                             Link {
                                 to: Route::Glossary{
-                                    chapter: "ch00-00-introduction.html".to_string(),
+                                    chapter: use_signal(|| "ch00-00-introduction".to_string()),
                                 },
                                 class: "nav-link",
                                 "Glossary"
