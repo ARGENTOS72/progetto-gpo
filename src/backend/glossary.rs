@@ -150,8 +150,8 @@ impl Chapter {
         &self.content
     }
 
-    pub fn get_sub_chapters(&self) -> &Vec<SubChapter> {
-        &self.sub_chapters
+    pub fn get_sub_chapters(&self) ->Vec<SubChapter> {
+        self.sub_chapters.clone()
     }
 }
 

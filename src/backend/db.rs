@@ -39,6 +39,8 @@ use surrealdb::{
     Surreal,
 };
 
+// Dovrebbe funzionare (preso da tutorial/documentazione)
+// In caso commentare
 lazy_static! {
     static ref DB: AsyncOnce<Surreal<Client>> = {
         AsyncOnce::new(async {
