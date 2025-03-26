@@ -38,6 +38,9 @@ const MAIN_SCSS: Asset = asset!("/assets/styling/custom.scss");
 fn main() {
     env_logger::Builder::new()
         .filter_level(log::LevelFilter::max())
+        .filter_module("tokio_tungstenite", log::LevelFilter::Off)
+        .filter_module("tungstenite", log::LevelFilter::Off)
+        .filter_module("tracing", log::LevelFilter::Off)
         .init();
     let lvl = get_level(1, 1).unwrap();
     println!("Deserialized level from main: {:?}", lvl.clone());
