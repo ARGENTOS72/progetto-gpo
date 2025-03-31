@@ -53,10 +53,16 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
                 if let Some(mut ch_append) = chapters.get_mut(&chapter_unit) {
                     ch_append.content = read_to_string(file.path())?;
                     ch_append.title = title;
+                    ch_append.id = format!("{}-{}", &chapter_unit, &subchapter_unit);
                 } else {
                     chapters.insert(
-                        chapter_unit,
-                        Chapter::new(title, read_to_string(file.path())?, Vec::new()),
+                        chapter_unit.clone(),
+                        Chapter::new(
+                            title,
+                            read_to_string(file.path())?,
+                            format!("{}-{}", &chapter_unit, &subchapter_unit),
+                            Vec::new(),
+                        ),
                     );
                 }
             } else {
@@ -72,14 +78,17 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
                         Chapter::new(
                             format!("Capitolo {}", &chapter_unit),
                             String::from(""),
+                            format!("{}-{}", &chapter_unit, &subchapter_unit),
                             Vec::new(),
                         ),
                     );
                 }
                 if let Some(mut ch_append) = chapters.get_mut(&chapter_unit) {
-                    ch_append
-                        .sub_chapters
-                        .push(SubChapter::new(title, read_to_string(file.path())?));
+                    ch_append.sub_chapters.push(SubChapter::new(
+                        title,
+                        format!("{}-{}", &chapter_unit, &subchapter_unit),
+                        read_to_string(file.path())?,
+                    ));
                     ch_append.sub_chapters.sort();
                 }
             }
@@ -144,15 +153,17 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
 pub struct Chapter {
     title: String,
     content: String,
+    id: String,
     sub_chapters: Vec<SubChapter>,
 }
 
 impl Chapter {
-    fn new(title: String, content: String, sub_chapters: Vec<SubChapter>) -> Self {
+    fn new(title: String, content: String, id: String, sub_chapters: Vec<SubChapter>) -> Self {
         Self {
             title,
             content,
             sub_chapters,
+            id,
         }
     }
 
@@ -162,6 +173,10 @@ impl Chapter {
 
     pub fn get_content(&self) -> &str {
         &self.content
+    }
+
+    pub fn get_id(&self) -> &str {
+        &self.id
     }
 
     pub fn get_sub_chapters(&self) -> Vec<SubChapter> {
@@ -193,11 +208,23 @@ impl Eq for Chapter {}
 pub struct SubChapter {
     title: String,
     content: String,
+    id: String,
 }
 
 impl SubChapter {
-    fn new(title: String, content: String) -> Self {
-        Self { title, content }
+    fn new(title: String, content: String, id: String) -> Self {
+        Self { title, content, id }
+    }
+    pub fn get_title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn get_content(&self) -> &str {
+        &self.content
+    }
+
+    pub fn get_id(&self) -> &str {
+        &self.id
     }
 }
 
@@ -333,6 +360,21 @@ pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
 
     file_reader.read_to_string(&mut html)?;
 
+    //Manipulate html with scarper
+    let parsed_html = Html::parse_fragment(&html);
+    let nodes = parsed_html.tree.root().children();
+
+    let children_vnodes: Vec<VNode> = nodes.map(convert_node).collect(); //all html file into Vec<VNode>
+
+    //wrap in a parent container
+    rsx! {
+        div {
+            {children_vnodes.into_iter()}
+        }
+    }
+}
+
+pub fn get_glossary_body_rsxed(html: &mut String) -> Result<VNode, RenderError> {
     //Manipulate html with scarper
     let parsed_html = Html::parse_fragment(&html);
     let nodes = parsed_html.tree.root().children();

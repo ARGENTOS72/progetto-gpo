@@ -1,4 +1,7 @@
-use crate::{backend::glossary::get_chapters, components::GlossaryNavigation};
+use crate::{
+    backend::glossary::get_chapters,
+    components::{GlossaryContent, GlossaryNavigation},
+};
 use dioxus::prelude::*;
 
 use crate::backend::glossary::get_glossary_file_rsxed;
@@ -49,15 +52,11 @@ pub fn Glossary(chapter: Signal<String>) -> Element {
     rsx! {
         GlossaryNavigation {
             chapters: chapters.value()().unwrap().unwrap(), // Può dare problemi in caso commentare tutta la funzione
-            current_chapter: chapter,
+            current_subch: chapter,
         },
-        div {
-            class: "p-4",
-            style: "width: 75%; overflow: auto;",
-
-            h1 {
-                class: "mb-3",
-            }
+        GlossaryContent {
+            chapters: chapters.value()().unwrap().unwrap(),
+            chapter_id: chapter,
         }
     }
 }

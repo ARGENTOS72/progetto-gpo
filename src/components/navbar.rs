@@ -5,7 +5,7 @@ const CSS: Asset = asset!("/assets/styling/navbar.css");
 
 #[component]
 pub fn Navbar() -> Element {
-    let ccc : Option<String> = None;
+    let ccc: Option<String> = None;
     rsx! {
 
         link { rel: "stylesheet", href: CSS }
@@ -43,7 +43,7 @@ pub fn Navbar() -> Element {
                             class: "nav-item",
                             Link {
                                 to: Route::Glossary{
-                                    chapter: use_signal(|| "ch00-00-introduction".to_string()),
+                                    chapter: use_signal(|| "05-00".to_string()),
                                 },
                                 class: "nav-link",
                                 "Glossary"

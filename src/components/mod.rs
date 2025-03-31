@@ -8,4 +8,5 @@ mod echo;
 pub use echo::Echo;
 
 mod glossary_navigation;
+pub use glossary_navigation::GlossaryContent;
 pub use glossary_navigation::GlossaryNavigation;
