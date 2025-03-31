@@ -43,7 +43,7 @@ pub fn Navbar() -> Element {
                             class: "nav-item",
                             Link {
                                 to: Route::Glossary{
-                                    chapter: "05-00".to_string(),
+                                    chapter: "00-00".to_string(),
                                 },
                                 class: "nav-link",
                                 "Glossary"
@@ -61,7 +61,7 @@ pub fn Navbar() -> Element {
                             a { class: "nav-link", id: "playground", "Playground" }
                         }
                     }
-        
+
                     div { class: "d-flex",
                         Link {
                             to: Route::Login{},
