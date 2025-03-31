@@ -61,80 +61,77 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
 
     rsx! {
         div {
-            class: "d-flex", style: "height: 100%;",
+            class: "bg-light border-end p-3 flex-shrink-0 text-break",
+            style: "width: 25%; overflow: auto;",
             div {
-                class: "bg-light border-end p-3 flex-shrink-0 text-break",
-                style: "width: 25%; overflow: auto;",
-                div {
-                    class: "accordion",
-                    id: "chaptersAccordion",
-                    for chapter in chapters_rc.iter() { // Usa iter() su Rc
-                        div {
-                            class: "accordion-item",
-                            h2 {
-                                class: "accordion-header text-break",
-                                id: "heading-{chapter.get_title()}",
-                                class: "accordion-button {check_collapsed(chapter.get_id(), &current_chapter())}",
-                                "type": "button",
-                                "data-bs-toggle": "collapse",
-                                "data-bs-target": "#collapse-{chapter.get_title()}",
-                                "aria-expanded": "true",
-                                "aria-controls": "collapse-{chapter.get_title()}",
-                                onclick: {
-                                    let clone_chapter = chapter.clone();
+                class: "accordion position-sticky",
+                id: "chaptersAccordion",
+                for chapter in chapters_rc.iter() { // Usa iter() su Rc
+                    div {
+                        class: "accordion-item",
+                        h2 {
+                            class: "accordion-header text-break",
+                            id: "heading-{chapter.get_title()}",
+                            class: "accordion-button {check_collapsed(chapter.get_id(), &current_chapter())}",
+                            "type": "button",
+                            "data-bs-toggle": "collapse",
+                            "data-bs-target": "#collapse-{chapter.get_title()}",
+                            "aria-expanded": "true",
+                            "aria-controls": "collapse-{chapter.get_title()}",
+                            onclick: {
+                                let clone_chapter = chapter.clone();
 
-                                    move |_| {
-                                        if current_chapter() != clone_chapter.get_id() {
-                                            current_chapter.set(clone_chapter.get_id().to_string());
-                                            current_subch.set(clone_chapter.get_id().to_string());
-                                        }
+                                move |_| {
+                                    if current_chapter() != clone_chapter.get_id() {
+                                        current_chapter.set(clone_chapter.get_id().to_string());
+                                        current_subch.set(clone_chapter.get_id().to_string());
                                     }
-                                },
-                                "{chapter.get_title()}"
-                            }
+                                }
+                            },
+                            "{chapter.get_title()}"
+                        }
+                        div {
+                            id: "collapse-{chapter.get_title()}",
+                            class: "accordion-collapse collapse text-break {check_show(chapter.get_id(), &current_chapter())}",
+                            "aria-labelledby": "#heading-{chapter.get_title()}",
+                            "data-bs-parent": "#chaptersAccordion",
                             div {
-                                id: "collapse-{chapter.get_title()}",
-                                class: "accordion-collapse collapse text-break {check_show(chapter.get_id(), &current_chapter())}",
-                                "aria-labelledby": "#heading-{chapter.get_title()}",
-                                "data-bs-parent": "#chaptersAccordion",
+                                class: "accordion-body",
+
                                 div {
-                                    class: "accordion-body",
+                                    class: "list-group list-group-flush list-group-item-action",
 
-                                    div {
-                                        class: "list-group list-group-flush list-group-item-action",
-
-                                        for sub_chapter in chapter.get_sub_chapters() {
-                                            button {
-                                                class: "list-group-item-action list-group-item text-break",
-                                                "type": "button",
-                                                onclick: {
-                                                    let chapters = chapters_rc.clone(); // Clone Rc
-                                                    let sub_chapter = sub_chapter.clone();
-                                                    move |_| {
-                                                        let unit: usize = current_chapter.read()
-                                                            .split("-")
-                                                            .next()
-                                                            .unwrap_or("00")
-                                                            .parse()
-                                                            .unwrap_or(0);
-                                                        if let Some(ch) = chapters.get(unit) {
-                                                            if !check_unit(&sub_chapter.get_id(), ch){
-                                                                let new_unit: usize = sub_chapter.get_id()
-                                                                    .split("-")
-                                                                    .next()
-                                                                    .unwrap_or("00")
-                                                                    .parse()
-                                                                    .unwrap_or(0);
-                                                                current_chapter.set(format!("{:02}-00", &new_unit));
-                                                            }
-                                                            if current_subch() != sub_chapter.get_id().to_string(){
-                                                                current_subch.set(sub_chapter.get_id().to_string());
-                                                            }
+                                    for sub_chapter in chapter.get_sub_chapters() {
+                                        button {
+                                            class: "list-group-item-action list-group-item text-break",
+                                            "type": "button",
+                                            onclick: {
+                                                let chapters = chapters_rc.clone(); // Clone Rc
+                                                let sub_chapter = sub_chapter.clone();
+                                                move |_| {
+                                                    let unit: usize = current_chapter.read()
+                                                        .split("-")
+                                                        .next()
+                                                        .unwrap_or("00")
+                                                        .parse()
+                                                        .unwrap_or(0);
+                                                    if let Some(ch) = chapters.get(unit) {
+                                                        if !check_unit(&sub_chapter.get_id(), ch){
+                                                            let new_unit: usize = sub_chapter.get_id()
+                                                                .split("-")
+                                                                .next()
+                                                                .unwrap_or("00")
+                                                                .parse()
+                                                                .unwrap_or(0);
+                                                            current_chapter.set(format!("{:02}-00", &new_unit));
+                                                        }
+                                                        if current_subch() != sub_chapter.get_id().to_string(){
+                                                            current_subch.set(sub_chapter.get_id().to_string());
                                                         }
                                                     }
-                                                },
-                                                "{sub_chapter.get_title()}"
-                                            }
+                                                }
+                                            },
+                                            "{sub_chapter.get_title()}"
                                         }
                                     }
                                 }
@@ -171,11 +168,9 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
     rsx! {
         div {
             class: "p-4",
-            style: "width: 75%; overflow: auto;",
+            style: "width: 73%; overflow: auto;",
             h1 {
-
-                    "{chapter.0}"
-
+                "{chapter.0}"
             }
             {content_rsx}
         }
