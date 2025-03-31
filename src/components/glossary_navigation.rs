@@ -132,7 +132,7 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
         .unwrap_or(0);
     let mut current_chapter: Signal<String> = use_signal(|| format!("{}-00", &unit));
     let chapters_rc = std::rc::Rc::new(chapters); // Wrap in Rc
-    println!("{}", current_subch());
+    // println!("{}", current_subch());
 
     rsx! {
         div {
@@ -193,9 +193,16 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
                                                             .parse()
                                                             .unwrap_or(0);
                                                         if let Some(ch) = chapters.get(unit) {
-                                                            if check_unit(&sub_chapter.get_id(), ch)
-                                                                && current_subch() != sub_chapter.get_id().to_string()
-                                                            {
+                                                            if !check_unit(&sub_chapter.get_id(), ch){
+                                                                let new_unit: usize = sub_chapter.get_id()
+                                                                    .split("-")
+                                                                    .next()
+                                                                    .unwrap_or("00")
+                                                                    .parse()
+                                                                    .unwrap_or(0);
+                                                                current_chapter.set(format!("{}-00", &new_unit));
+                                                            }
+                                                            if current_subch() != sub_chapter.get_id().to_string(){
                                                                 current_subch.set(sub_chapter.get_id().to_string());
                                                             }
                                                         }
@@ -228,9 +235,9 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
 
     let tmp_ch_list = unit.get_sub_chapters();
 
-    println!("ùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùùù{}", subch_num);
+    println!("gappytolo{:?}", ch);
     if subch_num != 0 {
-        let subch = tmp_ch_list.get(subch_num).unwrap();
+        let subch = tmp_ch_list.get(subch_num-1).expect("Coglione non cancellare i capitoli, testa di cazzo!");
         chapter = (subch.get_title(), subch.get_content());
     }
 

@@ -86,8 +86,8 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
                 if let Some(mut ch_append) = chapters.get_mut(&chapter_unit) {
                     ch_append.sub_chapters.push(SubChapter::new(
                         title,
-                        format!("{}-{}", &chapter_unit, &subchapter_unit),
                         read_to_string(file.path())?,
+                        format!("{}-{}", &chapter_unit, &subchapter_unit),
                     ));
                     ch_append.sub_chapters.sort();
                 }
@@ -212,7 +212,7 @@ pub struct SubChapter {
 }
 
 impl SubChapter {
-    fn new(title: String, content: String, id: String) -> Self {
+    pub fn new(title: String, content: String, id: String) -> Self {
         Self { title, content, id }
     }
     pub fn get_title(&self) -> &str {
