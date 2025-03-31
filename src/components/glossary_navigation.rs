@@ -2,7 +2,7 @@ use dioxus::{html::mo::rspace, prelude::*};
 use log::debug;
 
 use crate::{
-    backend::glossary::{Chapter, SubChapter, get_glossary_body_rsxed},
+    backend::glossary::{get_glossary_body_rsxed, Chapter, SubChapter},
     Route,
 };
 
@@ -28,7 +28,7 @@ fn check_show<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
 
 fn check_active<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
     debug!("{} vs {}", chapter, current_chapter);
-    
+
     if chapter == current_chapter {
         "active"
     } else {
@@ -45,7 +45,6 @@ fn check_unit<'a>(current_subch: &'a str, chapter: &'a Chapter) -> bool {
     false
 }
 
-
 #[component]
 pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>) -> Element {
     let unit: usize = current_subch
@@ -57,7 +56,7 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
         .unwrap_or(0);
     let mut current_chapter: Signal<String> = use_signal(|| format!("{:02}-00", &unit));
     let chapters_rc = std::rc::Rc::new(chapters); // Wrap in Rc
-    // println!("{}", current_subch());
+                                                  // println!("{}", current_subch());
 
     rsx! {
         div {
@@ -82,9 +81,11 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
                                 let clone_chapter = chapter.clone();
 
                                 move |_| {
+                                    if current_subch() != clone_chapter.get_id(){
+                                        current_subch.set(clone_chapter.get_id().to_string());
+                                    }
                                     if current_chapter() != clone_chapter.get_id() {
                                         current_chapter.set(clone_chapter.get_id().to_string());
-                                        current_subch.set(clone_chapter.get_id().to_string());
                                     }
                                 }
                             },
@@ -159,7 +160,9 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
 
     println!("gappytolo{:?}", ch);
     if subch_num != 0 {
-        let subch = tmp_ch_list.get(subch_num-1).expect("Coglione non cancellare i capitoli, testa di cazzo!");
+        let subch = tmp_ch_list
+            .get(subch_num - 1)
+            .expect("Coglione non cancellare i capitoli, testa di cazzo!");
         chapter = (subch.get_title(), subch.get_content());
     }
 
