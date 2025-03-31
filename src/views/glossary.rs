@@ -3,6 +3,7 @@ use crate::{
     components::{GlossaryContent, GlossaryNavigation},
 };
 use dioxus::prelude::*;
+use log::debug;
 
 use crate::backend::glossary::get_glossary_file_rsxed;
 
@@ -44,10 +45,12 @@ use crate::backend::glossary::get_glossary_file_rsxed;
 // }
 
 #[component]
-pub fn Glossary(chapter: Signal<String>) -> Element {
+pub fn Glossary(chapter: String) -> Element {
     let chapters = use_server_future(move || async move { get_chapters().await })?;
 
-    // dbg!(chapters.value());
+    debug!("{}", chapter);
+
+    let chapter = use_signal(|| chapter);
 
     rsx! {
         GlossaryNavigation {

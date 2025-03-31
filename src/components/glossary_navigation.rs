@@ -1,11 +1,14 @@
 use dioxus::{html::mo::rspace, prelude::*};
+use log::debug;
 
 use crate::{
-    backend::glossary::{Chapter, SubChapter},
+    backend::glossary::{Chapter, SubChapter, get_glossary_body_rsxed},
     Route,
 };
 
 fn check_collapsed<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
+    debug!("{} vs {}", chapter, current_chapter);
+
     if chapter != current_chapter {
         "collapsed"
     } else {
@@ -14,6 +17,8 @@ fn check_collapsed<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
 }
 
 fn check_show<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
+    debug!("{} vs {}", chapter, current_chapter);
+
     if chapter == current_chapter {
         "show"
     } else {
@@ -22,6 +27,8 @@ fn check_show<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
 }
 
 fn check_active<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
+    debug!("{} vs {}", chapter, current_chapter);
+    
     if chapter == current_chapter {
         "active"
     } else {
@@ -38,88 +45,6 @@ fn check_unit<'a>(current_subch: &'a str, chapter: &'a Chapter) -> bool {
     false
 }
 
-// #[component]
-// pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_chapter: Signal<String>) -> Element {
-//     let mut current_subch: Signal<String> = use_signal(|| current_chapter.read().clone());
-//     rsx! {
-//         div {
-//             class: "d-flex", style: "height: 100%;",
-
-//             div {
-//                 class: "bg-light border-end p-3 flex-shrink-0",
-//                 style: "width: 25%; overflow: auto;",
-
-//                 div {
-//                     class: "accordion",
-//                     id: "chaptersAccordion",
-
-//                     for chapter in chapters {
-//                         div {
-//                             class: "accordion-item",
-//                             h2 {
-//                                 class: "accordion-header",
-//                                 id: "heading-{chapter.get_title()}",
-//                                 class: "accordion-button {check_collapsed(chapter.get_title(), &current_chapter())}",
-//                                 "type": "button",
-//                                 "data-bs-toggle": "collapse",
-//                                 "data-bs-target": "#collapse-{chapter.get_title()}",
-//                                 "aria-expanded": "true",
-//                                 "aria-controls": "collapse-{chapter.get_title()}",
-//                                 onclick: {
-//                                     let clone_chapter = chapter.clone();
-
-//                                     move |_| {
-//                                         if current_chapter() != clone_chapter.get_title() {
-//                                             current_chapter.with_mut(|value| *value = clone_chapter.get_title().to_string());
-//                                         }
-//                                     }
-//                                 },
-//                                 "{chapter.get_title()}"
-//                             }
-//                             div {
-//                                 id: "collapse-{chapter.get_title()}",
-//                                 class: "accordion-collapse collapse {check_show(chapter.get_title(), &current_chapter())}",
-//                                 "aria-labelledby": "#heading-{chapter.get_title()}",
-//                                 "data-bs-parent": "#chaptersAccordion",
-//                                 div {
-//                                     class: "accordion-body",
-
-//                                     div {
-//                                         class: "list-group list-group-flush list-group-item-action",
-
-//                                         for sub_chapter in chapter.get_sub_chapters() {
-//                                             button {
-//                                                 class: "list-group-item-action dropdown-item list-group-item",
-//                                                 onclick: {
-//                                                     move |_| {
-//                                                         let clone_chapter = sub_chapter.clone();
-//                                                         let unit: usize = current_chapter.read().clone()
-//                                                             .split("-")
-//                                                             .next()
-//                                                             .unwrap_or("00")
-//                                                             .parse()
-//                                                             .unwrap_or(0);
-//                                                         let ch = chapters.get(unit).unwrap();
-//                                                         if check_unit(&clone_chapter.get_id(), ch.clone())
-//                                                             && current_subch() != clone_chapter.get_id().to_string()
-//                                                         {
-//                                                             current_subch.with_mut(|value| *value = clone_chapter.get_id().to_string());
-//                                                         }
-//                                                     }
-//                                                 },
-//                                                 "{sub_chapter.get_title()}"
-//                                             }
-//                                         }
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
 
 #[component]
 pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>) -> Element {
@@ -130,7 +55,7 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
         .unwrap_or("00")
         .parse()
         .unwrap_or(0);
-    let mut current_chapter: Signal<String> = use_signal(|| format!("{}-00", &unit));
+    let mut current_chapter: Signal<String> = use_signal(|| format!("{:02}-00", &unit));
     let chapters_rc = std::rc::Rc::new(chapters); // Wrap in Rc
     // println!("{}", current_subch());
 
@@ -200,7 +125,7 @@ pub fn GlossaryNavigation(chapters: Vec<Chapter>, current_subch: Signal<String>)
                                                                     .unwrap_or("00")
                                                                     .parse()
                                                                     .unwrap_or(0);
-                                                                current_chapter.set(format!("{}-00", &new_unit));
+                                                                current_chapter.set(format!("{:02}-00", &new_unit));
                                                             }
                                                             if current_subch() != sub_chapter.get_id().to_string(){
                                                                 current_subch.set(sub_chapter.get_id().to_string());
@@ -241,6 +166,8 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
         chapter = (subch.get_title(), subch.get_content());
     }
 
+    let content_rsx = get_glossary_body_rsxed(&mut chapter.1.to_string()).unwrap();
+
     rsx! {
         div {
             class: "p-4",
@@ -250,6 +177,7 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
                     "{chapter.0}"
 
             }
+            {content_rsx}
         }
     }
 }

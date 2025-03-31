@@ -15,8 +15,8 @@ enum Route {
     #[route("/")]
     Home {},
 
-    #[route("/glossary")]
-    Glossary { chapter: Signal<String> },
+    #[route("/glossary/:chapter/")]
+    Glossary { chapter: String },
 
     #[route("/login")]
     Login {},
@@ -40,6 +40,8 @@ fn main() {
         .filter_level(log::LevelFilter::max())
         .filter_module("tokio_tungstenite", log::LevelFilter::Off)
         .filter_module("tungstenite", log::LevelFilter::Off)
+        .filter_module("tao", log::LevelFilter::Off)
+        .filter_module("html5ever", log::LevelFilter::Off)
         .filter_module("tracing", log::LevelFilter::Off)
         .init();
     // let lvl = get_level(1, 1).unwrap();

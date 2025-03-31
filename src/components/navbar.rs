@@ -1,11 +1,11 @@
 use crate::Route;
 use dioxus::prelude::*;
+use log::debug;
 
 const CSS: Asset = asset!("/assets/styling/navbar.css");
 
 #[component]
 pub fn Navbar() -> Element {
-    let ccc: Option<String> = None;
     rsx! {
 
         link { rel: "stylesheet", href: CSS }
@@ -43,7 +43,7 @@ pub fn Navbar() -> Element {
                             class: "nav-item",
                             Link {
                                 to: Route::Glossary{
-                                    chapter: use_signal(|| "05-00".to_string()),
+                                    chapter: "05-00".to_string(),
                                 },
                                 class: "nav-link",
                                 "Glossary"
@@ -61,31 +61,7 @@ pub fn Navbar() -> Element {
                             a { class: "nav-link", id: "playground", "Playground" }
                         }
                     }
-                    // ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
-
-
-
-                    // li { class: "nav-item",
-                    // Link { to: Route::Glossary{
-                    //     chapter: None,
-                    // }, "Glossary" }
-                    // ul { class: "navbar-nav me-auto mb-2 mb-lg-0",
-
-
-                    // li { class: "nav-item",
-                    //     a { class: "nav-link", id: "learning", "Learning" }
-                    // }
-                    // li { class: "nav-item",
-                    //     Link {
-                    //         to: Route::Glossary{},
-                    //         class: "nav-link",
-                    //         "Glossary"
-                    //     }
-                    // }
-                    // li { class: "nav-item",
-                    //     a { class: "nav-link", id: "playground", "Playground" }
-                    // }
-                    // }
+        
                     div { class: "d-flex",
                         Link {
                             to: Route::Login{},

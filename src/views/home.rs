@@ -1,5 +1,7 @@
 use dioxus::prelude::*;
 
+use crate::Route;
+
 const CSS: Asset = asset!("/assets/styling/home.css");
 
 #[component]
