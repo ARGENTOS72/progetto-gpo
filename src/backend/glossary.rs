@@ -4,7 +4,7 @@ use dioxus::{dioxus_core::VText, prelude::*};
 use ego_tree::NodeRef;
 use log::debug;
 use regex::Regex;
-use scraper::{node::Element, Html, Node};
+use scraper::{node::Element, ElementRef, Html, Node};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
@@ -16,6 +16,15 @@ use std::{
 };
 
 use crate::{error::Error, Route};
+use std::env::current_dir;
+use syntect::{highlighting::Highlighter, parsing::SyntaxSet};
+use syntect::{
+    highlighting::{Color, ThemeSet},
+    html::highlighted_html_for_string,
+};
+use syntect::{html::highlighted_html_for_file, parsing::SyntaxReference};
+
+use relative_path::RelativePath;
 
 const GLOSSARY_PATH: &str = "./glossary";
 
@@ -100,7 +109,6 @@ pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
 
     Ok(ch_vec)
 }
-
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Chapter {
@@ -201,7 +209,6 @@ impl PartialEq for SubChapter {
 
 impl Eq for SubChapter {}
 
-
 pub fn get_glossary_file_rsxed(file_name: &str) -> Result<VNode, RenderError> {
     let file = File::open(
         Path::new(GLOSSARY_PATH)
@@ -253,6 +260,8 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
 
         Node::Element(element_node) => {
             let tag_name = element_node.name.local.as_ref();
+            let style = element_node.attr("style").unwrap_or_default();
+            let class = element_node.attr("class").unwrap_or_default();
 
             //get all child
             let children_vnodes: Vec<VNode> = node.children().map(convert_node).collect();
@@ -282,24 +291,114 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                 }
 
                 //acceptable tag
-                "p" => rsx! { p { {children_vnodes.into_iter()} } }.unwrap(),
-                "h1" => rsx! { h1 { {children_vnodes.into_iter()} } }.unwrap(),
-                "ul" => rsx! { ul { {children_vnodes.into_iter()} } }.unwrap(),
-                "ol" => rsx! { ol { {children_vnodes.into_iter()} } }.unwrap(),
-                "li" => rsx! { li { {children_vnodes.into_iter()} } }.unwrap(),
-                "div" => rsx! { div { {children_vnodes.into_iter()} } }.unwrap(),
+                "p" => rsx! { p { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "h1" => rsx! { h1 { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "ul" => rsx! { ul { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "ol" => rsx! { ol { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "li" => rsx! { li { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "div" => rsx! { div { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
                 "strong" => rsx! { strong { {children_vnodes.into_iter()} } }.unwrap(),
-                "em" => rsx! { em { {children_vnodes.into_iter()} } }.unwrap(),
-                "code" => rsx! { code { {children_vnodes.into_iter()} } }.unwrap(),
-                "blockquote" => rsx! { blockquote { {children_vnodes.into_iter()} } }.unwrap(),
-                "button" => rsx! { button { {children_vnodes.into_iter()} } }.unwrap(),
-                "caption" => rsx! { caption { {children_vnodes.into_iter()} } }.unwrap(),
-                "details" => rsx! { details { {children_vnodes.into_iter()} } }.unwrap(),
-                "summary" => rsx! { summary { {children_vnodes.into_iter()} } }.unwrap(),
-                "fieldset" => rsx! { fieldset { {children_vnodes.into_iter()} } }.unwrap(),
+                "pre" => rsx! { pre { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "em" => rsx! { em { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "code" => {
+                    if( class.is_empty() ){
+                        rsx! {
+                            code {
+                                class: "{class}",style: "{style}",
+                                {children_vnodes.into_iter()}
+                            }
+                        }
+                        .unwrap()
+                    }else{
+                        // let theme_content = Path::new(&"/home/redkitty/tr4nnysstuff/progetto-gpo/assets/styling/codetheme/")
+                        let root = current_dir().unwrap_or_default();
+
+                        // to_path unconditionally concatenates a relative path with its base:
+                        let theme_content = RelativePath::new(&"../../assets/styling/codetheme/");
+                        let full_path = theme_content.to_path(&root);
+
+                        let mut theme_set = ThemeSet::load_defaults();
+                        theme_set.add_from_folder(full_path).expect("Failed to load custom themes");
+                        println!("Temi disponibili: {:?}", theme_set.themes.keys());
+                        let ss = SyntaxSet::load_defaults_newlines();
+                        let syntax = ss.find_syntax_by_extension("rs").unwrap();
+
+                        let theme = &theme_set.themes["Erm"];
+                        let c = theme.settings.background.unwrap_or(Color::BLACK);
+
+
+
+                        let mut code_text = node
+                            .children()
+                            .filter_map(|child| match child.value() {
+                                Node::Text(text) => Some(text.text.to_string()),
+                                _ => None,
+                            })
+                            .collect::<Vec<String>>()
+                            .join("");
+                        // code_text= format!(
+                        //     "<pre style=\"background-color: #272822; color: #f8f8f2; padding: 1em; border-radius: 5px;\">\n{}</pre>",
+                        //     code_text
+                        // );
+
+                        let html = highlighted_html_for_string(&code_text, &ss, syntax, theme).unwrap();
+
+                        let ercodice = Html::parse_fragment(&html);
+                        let nodi_dercodice = ercodice.tree.root().children();
+
+                        let i_bambini_dercodice: Vec<VNode> =
+                            nodi_dercodice.map(convert_node).collect(); //all html file into Vec<VNode>
+                        rsx! {
+                            div {
+                                class: "px-4 fs-6 py-2 justify-content-center codeblock",
+                                code {
+                                    class: "{class}, rounded",
+                                    style: "{style}",
+                                    {i_bambini_dercodice.into_iter()}
+                                    // {html}
+                                }
+                            }
+
+                        }
+                        .unwrap()
+                    }
+
+                }
+                "blockquote" => {
+                    rsx! { blockquote {class: "{class}", style: "{style}",{children_vnodes.into_iter()} } }.unwrap()
+                }
+                "button" => {
+                    rsx! { button { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap()
+                }
+                "caption" => {
+                    rsx! { caption {class: "{class}",style: "{style}", {children_vnodes.into_iter()} } }.unwrap()
+                }
+                "details" => {
+                    rsx! { details {class: "{class}", style: "{style}",{children_vnodes.into_iter()} } }.unwrap()
+                }
+                "summary" => {
+                    rsx! { summary { class: "{class}", style: "{style}",{children_vnodes.into_iter()} } }.unwrap()
+                }
+                "fieldset" => {
+                    rsx! { fieldset {class: "{class}", style: "{style}", {children_vnodes.into_iter()} } }.unwrap()
+                }
+                "pre" => {
+                    rsx! { pre {class: "{class}",style: "{style}", {children_vnodes.into_iter()} } }
+                        .unwrap()
+                }
                 "br" => rsx! { br {} }.unwrap(),
                 "hr" => rsx! { hr {} }.unwrap(),
-
+                "kbd" => rsx! { kbd { {children_vnodes.into_iter()} } }.unwrap(),
+                "span" => {
+                    rsx! {
+                        span {
+                            class: "{class}",
+                            style: "{style}",
+                            {children_vnodes.into_iter()}
+                        }
+                    }
+                    .unwrap()
+                }
                 //other: default as div
                 _ => rsx! { div { {children_vnodes.into_iter()} } }.unwrap(),
             }
@@ -312,9 +411,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
 fn to_route(route: &str) -> Option<Route> {
     if route.starts_with("/glossary") {
         let ch = route.get(10..).map(String::from).unwrap(); //take out ONLY '/glossary#'
-        Some(Route::Glossary {
-            chapter: ch,
-        })
+        Some(Route::Glossary { chapter: ch })
     } else if route.starts_with("/login") {
         Some(Route::Login {})
     } else if route.starts_with("/signup") {

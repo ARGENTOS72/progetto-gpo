@@ -7,7 +7,7 @@ use crate::{
 };
 
 fn check_collapsed<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
-    debug!("{} vs {}", chapter, current_chapter);
+    // debug!("{} vs {}", chapter, current_chapter);
 
     if chapter != current_chapter {
         "collapsed"
@@ -17,7 +17,7 @@ fn check_collapsed<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
 }
 
 fn check_show<'a>(chapter: &'a str, current_chapter: &'a str) -> &'a str {
-    debug!("{} vs {}", chapter, current_chapter);
+    // debug!("{} vs {}", chapter, current_chapter);
 
     if chapter == current_chapter {
         "show"
