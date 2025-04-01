@@ -296,7 +296,15 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                 "ul" => rsx! { ul { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
                 "ol" => rsx! { ol { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
                 "li" => rsx! { li { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "table" => rsx! { table { class: "{class} table table-bordered",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "thead" => rsx! { thead { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "tfoot" => rsx! { tfoot { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "tbody" => rsx! { tbody { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "td" => rsx! { td { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "tr" => rsx! { tr { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                "th" => rsx! { th { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
                 "div" => rsx! { div { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
+                //img
                 "strong" => rsx! { strong { {children_vnodes.into_iter()} } }.unwrap(),
                 "pre" => rsx! { pre { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
                 "em" => rsx! { em { class: "{class}",style: "{style}",{children_vnodes.into_iter()} } }.unwrap(),
@@ -314,12 +322,13 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                         let root = current_dir().unwrap_or_default();
 
                         // to_path unconditionally concatenates a relative path with its base:
-                        let theme_content = RelativePath::new(&"../../assets/styling/codetheme/");
+                        let theme_content = RelativePath::new(&"/assets/styling/codetheme/");
                         let full_path = theme_content.to_path(&root);
+                        // println!{"{:?}",full_path};
 
                         let mut theme_set = ThemeSet::load_defaults();
                         theme_set.add_from_folder(full_path).expect("Failed to load custom themes");
-                        println!("Temi disponibili: {:?}", theme_set.themes.keys());
+                        // println!("Temi disponibili: {:?}", theme_set.themes.keys());
                         let ss = SyntaxSet::load_defaults_newlines();
                         let syntax = ss.find_syntax_by_extension("rs").unwrap();
 
@@ -350,9 +359,9 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                             nodi_dercodice.map(convert_node).collect(); //all html file into Vec<VNode>
                         rsx! {
                             div {
-                                class: "px-4 fs-6 py-2 justify-content-center codeblock",
+                                class: "px-4 fs-6 py-2 justify-content-center ",
                                 code {
-                                    class: "{class}, rounded",
+                                    class: "{class}, rounded codeblock",
                                     style: "{style}",
                                     {i_bambini_dercodice.into_iter()}
                                     // {html}
