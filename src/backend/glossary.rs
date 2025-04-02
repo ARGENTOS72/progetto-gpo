@@ -11,22 +11,63 @@ use std::{
     collections::HashMap,
     fs::{read_to_string, File},
     io::{self, BufReader, Read},
-    path::Path,
+    path::{Path, PathBuf},
     sync::{Arc, Mutex},
 };
 
 use crate::{error::Error, Route};
 use std::env::current_dir;
-use syntect::{highlighting::Highlighter, parsing::SyntaxSet};
 use syntect::{
     highlighting::{Color, ThemeSet},
     html::highlighted_html_for_string,
 };
+use syntect::{
+    highlighting::{Highlighter, Theme},
+    parsing::SyntaxSet,
+};
 use syntect::{html::highlighted_html_for_file, parsing::SyntaxReference};
 
+use once_cell::sync::Lazy;
 use relative_path::RelativePath;
 
 const GLOSSARY_PATH: &str = "./glossary";
+
+static THEME_PATH: Lazy<PathBuf> = Lazy::new(|| {
+    let root = current_dir().unwrap_or_default();
+    // to_path unconditionally concatenates a relative path with its base:
+    let theme_content = RelativePath::new(&"/assets/styling/codetheme/");
+    let full_path = theme_content.to_path(&root);
+    full_path
+});
+
+static THEME_SET: Lazy<ThemeSet> = Lazy::new(|| {
+    let mut theme_set = ThemeSet::load_defaults();
+    theme_set
+        .add_from_folder(THEME_PATH.as_path())
+        .expect("Failed to load custom themes");
+    theme_set
+});
+
+static SS: Lazy<SyntaxSet> = Lazy::new(|| {
+    let ss = SyntaxSet::load_defaults_newlines();
+    ss
+});
+
+static SYNTAX: Lazy<SyntaxReference> = Lazy::new(|| {
+    let syntax = SS.find_syntax_by_extension("rs").unwrap();
+    syntax.clone()
+});
+
+// println!("Temi disponibili: {:?}", theme_set.themes.keys());
+static THEME: Lazy<Theme> = Lazy::new(|| {
+    let theme = &THEME_SET.themes["Erm"];
+    theme.clone()
+});
+
+static C: Lazy<Color> = Lazy::new(|| {
+    let c = THEME.settings.background.unwrap_or(Color::BLACK);
+    c
+});
 
 //#[server]
 pub async fn get_chapters() -> Result<Vec<Chapter>, ServerFnError> {
@@ -319,21 +360,21 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                         .unwrap()
                     }else{
                         // let theme_content = Path::new(&"/home/redkitty/tr4nnysstuff/progetto-gpo/assets/styling/codetheme/")
-                        let root = current_dir().unwrap_or_default();
+                        // let root = current_dir().unwrap_or_default();
 
-                        // to_path unconditionally concatenates a relative path with its base:
-                        let theme_content = RelativePath::new(&"/assets/styling/codetheme/");
-                        let full_path = theme_content.to_path(&root);
-                        // println!{"{:?}",full_path};
+                        // // to_path unconditionally concatenates a relative path with its base:
+                        // let theme_content = RelativePath::new(&"/assets/styling/codetheme/");
+                        // let full_path = theme_content.to_path(&root);
+                        // // println!{"{:?}",full_path};
 
-                        let mut theme_set = ThemeSet::load_defaults();
-                        theme_set.add_from_folder(full_path).expect("Failed to load custom themes");
-                        // println!("Temi disponibili: {:?}", theme_set.themes.keys());
-                        let ss = SyntaxSet::load_defaults_newlines();
-                        let syntax = ss.find_syntax_by_extension("rs").unwrap();
+                        // let mut theme_set = ThemeSet::load_defaults();
+                        // theme_set.add_from_folder(full_path).expect("Failed to load custom themes");
+                        // // println!("Temi disponibili: {:?}", theme_set.themes.keys());
+                        // let ss = SyntaxSet::load_defaults_newlines();
+                        // let syntax = ss.find_syntax_by_extension("rs").unwrap();
 
-                        let theme = &theme_set.themes["Erm"];
-                        let c = theme.settings.background.unwrap_or(Color::BLACK);
+                        // let theme = &theme_set.themes["Erm"];
+                        // let c = theme.settings.background.unwrap_or(Color::BLACK);
 
 
 
@@ -350,7 +391,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
                         //     code_text
                         // );
 
-                        let html = highlighted_html_for_string(&code_text, &ss, syntax, theme).unwrap();
+                        let html = highlighted_html_for_string(&code_text, &SS, &SYNTAX, &THEME).unwrap();
 
                         let ercodice = Html::parse_fragment(&html);
                         let nodi_dercodice = ercodice.tree.root().children();
