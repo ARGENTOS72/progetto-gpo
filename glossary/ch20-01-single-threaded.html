@@ -36,8 +36,7 @@
     we’ll work on. The standard library offers a <code>std::net</code> module
     that lets us do this. Let’s make a new project in the usual fashion:
 </p>
-<pre><code class="language-console">
-$ cargo new hello
+<pre><code class="language-console">$ cargo new hello
 Created binary (application) `hello` project
 $ cd hello
 </code></pre>
@@ -48,8 +47,7 @@ $ cd hello
     <code>Connection established!</code>.
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust no_run edition2021">
-use std::net::TcpListener;
+<pre><pre class="playground"><code class="language-rust no_run edition2021">use std::net::TcpListener;
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -130,8 +128,7 @@ fn main() {
     should see several messages that were printed when the browser connected to
     the server!
 </p>
-<pre><code class="language-text">
-Running `target/debug/hello`
+<pre><code class="language-text">Running `target/debug/hello`
 Connection established!
 Connection established!
 Connection established!
@@ -169,8 +166,7 @@ Connection established!
     the browser. Change the code to look like Listing 20-2.
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust no_run edition2021">
-use std::{
+<pre><pre class="playground"><code class="language-rust no_run edition2021">use std::{
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
 };

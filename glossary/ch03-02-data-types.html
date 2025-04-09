@@ -25,8 +25,7 @@ let guess: u32 = "42".parse().expect("Not a number!");
     preceding code, Rust will display the following error, which means the
     compiler needs more information from us to know which type we want to use:
 </p>
-<pre><code class="language-console">
-$ cargo build
+<pre><code class="language-console">$ cargo build
    Compiling no_type_annotations v0.1.0 (file:///projects/no_type_annotations)
 error[E0284]: type annotations needed
  --&gt; src/main.rs:2:9
@@ -257,8 +256,7 @@ error: could not compile `no_type_annotations` (bin "no_type_annotations") due t
 </p>
 <p>Here’s an example that shows floating-point numbers in action:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     let x = 2.0; // f64
 
     let y: f32 = 3.0; // f32
@@ -279,8 +277,7 @@ fn main() {
     <code>let</code> statement:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     // addition
     let sum = 5 + 10;
 
@@ -314,8 +311,7 @@ fn main() {
     For example:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     let t = true;
 
     let f: bool = false; // with explicit type annotation
@@ -568,8 +564,7 @@ cd listings/ch03-common-programming-concepts/no-listing-15-invalid-array-access
 cargo run
 10
 -->
-<pre><code class="language-console">
-thread 'main' panicked at src/main.rs:19:19:
+<pre><code class="language-console">thread 'main' panicked at src/main.rs:19:19:
 index out of bounds: the len is 5 but the index is 10
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
