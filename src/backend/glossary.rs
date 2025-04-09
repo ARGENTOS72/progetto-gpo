@@ -296,7 +296,7 @@ fn convert_node(node: NodeRef<'_, Node>) -> VNode {
         Node::Text(text_node) => {
             let text = text_node.text.to_string();
 
-            return rsx! {" {text} "}.unwrap();
+            return rsx! {"{text}"}.unwrap();
         }
 
         Node::Element(element_node) => {

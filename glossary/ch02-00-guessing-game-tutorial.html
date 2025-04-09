@@ -28,8 +28,7 @@
     To set up a new project, go to the <em>projects</em> directory that you
     created in Chapter 1 and make a new project using Cargo, like so:
 </p>
-<pre><code class="language-console">
-$ cargo new guessing_game
+<pre><code class="language-console">$ cargo new guessing_game
 $ cd guessing_game
 </code></pre>
 <p>
@@ -47,8 +46,7 @@ cargo run > output.txt 2>&1
 cd ../../..
 -->
 <p><span class="filename">Filename: Cargo.toml</span></p>
-<pre><code class="language-toml">
-[package]
+<pre><code class="language-toml">[package]
 name = "guessing_game"
 version = "0.1.0"
 edition = "2021"
@@ -62,8 +60,7 @@ edition = "2021"
     program for you. Check out the <em>src/main.rs</em> file:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     println!("Hello, world!");
 }
 </code></pre></pre>
@@ -71,8 +68,7 @@ fn main() {
     Now let’s compile this “Hello, world!” program and run it in the same step
     using the <code>cargo run</code> command:
 </p>
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.50s
      Running `target/debug/guessing_game`
@@ -98,8 +94,7 @@ Hello, world!
 </p>
 <figure class="listing">
     <span class="file-name">Filename: src/main.rs</span>
-    <pre><code class="language-rust ignore">
-use std::io;
+    <pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -125,8 +120,7 @@ fn main() {
     <code>io</code> library comes from the standard library, known as
     <code>std</code>:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
 println!("Guess the number!");
@@ -159,8 +153,7 @@ println!("You guessed: {}", guess);
     As you saw in Chapter 1, the <code>main</code> function is the entry point
     into the program:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -185,8 +178,7 @@ fn main() {
     As you also learned in Chapter 1, <code>println!</code> is a macro that
     prints a string to the screen:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -213,8 +205,7 @@ fn main() {
 <p>
     Next, we’ll create a <em>variable</em> to store the user input, like this:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -293,8 +284,7 @@ let mut bananas = 5; // mutable</code></pre>
     we’ll call the <code>stdin</code> function from the <code>io</code> module,
     which will allow us to handle user input:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
 
@@ -358,8 +348,7 @@ ignore -->
     of text, but note that it’s still part of a single logical line of code. The
     next part is this method:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -369,8 +358,7 @@ fn main() {
     let mut guess = String::new();
 
     io::stdin()
-
-    .read_line(&amp;mut guess)
+        .read_line(&amp;mut guess)
         .expect("Failed to read line");
 
     println!("You guessed: {}", guess);
@@ -429,8 +417,7 @@ ignore -->
     If you don’t call <code>expect</code>, the program will compile, but you’ll
     get a warning:
 </p>
-<pre><code class="language-console">
-$ cargo build
+<pre><code class="language-console">$ cargo build
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
 warning: unused `Result` that must be used
   --&gt; src/main.rs:10:5
@@ -470,8 +457,7 @@ warning: `guessing_game` (bin "guessing_game") generated 1 warning
     Aside from the closing curly bracket, there’s only one more line to discuss
     in the code so far:
 </p>
-<pre><code class="language-rust ignore">
-use std::io;
+<pre><code class="language-rust ignore">use std::io;
 
 fn main() {
     println!("Guess the number!");
@@ -499,8 +485,7 @@ fn main() {
     placeholder in the same order. Printing a variable and the result of an
     expression in one call to <code>println!</code> would look like this:
 </p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust edition2021">#![allow(unused)]
 fn main() {
     let x = 5;
     let y = 10;
@@ -521,8 +506,7 @@ cd listings/ch02-guessing-game-tutorial/listing-02-01/
 cargo clean
 cargo run
 input 6 -->
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 6.44s
      Running `target/debug/guessing_game`
@@ -576,8 +560,7 @@ You guessed: 6
 * ch14-03-cargo-workspaces.md
 -->
 <p><span class="filename">Filename: Cargo.toml</span></p>
-<pre><code class="language-toml">
-[dependencies]
+<pre><code class="language-toml">[dependencies]
 rand = "0.8.5"
 </code></pre>
 <p>
@@ -611,8 +594,7 @@ rm Cargo.lock
 cargo clean
 cargo build -->
 <figure class="listing">
-    <pre><code class="language-console">
-$ cargo build
+    <pre><code class="language-console">$ cargo build
     Updating crates.io index
   Downloaded rand v0.8.5
   Downloaded libc v0.2.127
@@ -730,8 +712,7 @@ cd listings/ch02-guessing-game-tutorial/listing-02-02/
 cargo update
 assuming there is a new 0.8.x version of rand; otherwise use another update
 as a guide to creating the hypothetical output shown here -->
-<pre><code class="language-console">
-$ cargo update
+<pre><code class="language-console">$ cargo update
     Updating crates.io index
     Updating rand v0.8.5 -&gt; v0.8.6
 </code></pre>
@@ -774,8 +755,7 @@ rand = "0.9.0"
 </p>
 <figure class="listing">
     <span class="file-name">Filename: src/main.rs</span>
-    <pre><code class="language-rust ignore">
-use std::io;
+    <pre><code class="language-rust ignore">use std::io;
 use rand::Rng;
 
 fn main() {
@@ -846,8 +826,7 @@ cargo run
 cargo run
 5
 -->
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
      Running `target/debug/guessing_game`
@@ -882,8 +861,7 @@ You guessed: 5
 </p>
 <figure class="listing">
     <span class="file-name">Filename: src/main.rs</span>
-    <pre><code class="language-rust ignore does_not_compile">
-use rand::Rng;
+    <pre><code class="language-rust ignore does_not_compile">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
@@ -972,8 +950,7 @@ fn main() {
 The error numbers in this output should be that of the code **WITHOUT** the
 anchor or snip comments
 -->
-<pre><code class="language-console">
-$ cargo build
+<pre><code class="language-console">$ cargo build
  Downloading crates ...
   Downloaded rand_core v0.6.2
   Downloaded getrandom v0.2.2
@@ -1024,8 +1001,7 @@ error: could not compile `guessing_game` (bin "guessing_game") due to 1 previous
     number. We do so by adding this line to the <code>main</code> function body:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><code class="language-rust ignore">
-use rand::Rng;
+<pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
@@ -1132,8 +1108,7 @@ cd listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/
 cargo run
   76
 -->
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 0.43s
      Running `target/debug/guessing_game`
@@ -1165,8 +1140,7 @@ Too big!
     give users more chances at guessing the number:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><code class="language-rust ignore">
-use rand::Rng;
+<pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
@@ -1227,8 +1201,7 @@ cargo run
 (correct guess)
 quit
 -->
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 1.50s
      Running `target/debug/guessing_game`
@@ -1266,8 +1239,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
     <code>break</code> statement:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><code class="language-rust ignore">
-use rand::Rng;
+<pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
@@ -1322,8 +1294,7 @@ fn main() {
 </p>
 <figure class="listing">
     <span class="file-name">Filename: src/main.rs</span>
-    <pre><code class="language-rust ignore">
-use rand::Rng;
+    <pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
@@ -1411,8 +1382,7 @@ cargo run
 foo
 (correct guess)
 -->
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 4.45s
      Running `target/debug/guessing_game`
@@ -1441,8 +1411,7 @@ You win!
 </p>
 <figure class="listing">
     <span class="file-name">Filename: src/main.rs</span>
-    <pre><code class="language-rust ignore">
-use rand::Rng;
+    <pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 

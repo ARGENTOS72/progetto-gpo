@@ -158,7 +158,7 @@ pub fn GlossaryContent(chapters: Vec<Chapter>, chapter_id: Signal<String>) -> El
 
     let tmp_ch_list = unit.get_sub_chapters();
 
-    println!("gappytolo{:?}", ch);
+    // println!("gappytolo{:?}", ch);
     if subch_num != 0 {
         let subch = tmp_ch_list
             .get(subch_num - 1)

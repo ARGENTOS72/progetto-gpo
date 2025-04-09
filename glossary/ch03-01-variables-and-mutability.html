@@ -27,8 +27,7 @@
     won’t compile just yet:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><code class="language-rust ignore does_not_compile">
-fn main() {
+<pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = 5;
     println!("The value of x is: {x}");
     x = 6;
@@ -38,8 +37,7 @@ fn main() {
     Save and run the program using <code>cargo run</code>. You should receive an
     error message regarding an immutability error, as shown in this output:
 </p>
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
 error[E0384]: cannot assign twice to immutable variable `x`
  --&gt; src/main.rs:4:5
@@ -95,16 +93,14 @@ error: could not compile `variables` (bin "variables") due to 1 previous error
 </p>
 <p>For example, let’s change <em>src/main.rs</em> to the following:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     let mut x = 5;
     println!("The value of x is: {x}");
     x = 6;
     println!("The value of x is: {x}");
 }</code></pre></pre>
 <p>When we run the program now, we get this:</p>
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/variables`
@@ -143,8 +139,7 @@ The value of x is: 6
     runtime.
 </p>
 <p>Here’s an example of a constant declaration:</p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust edition2021">#![allow(unused)]
 fn main() {
     const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 }
@@ -193,8 +188,7 @@ fn main() {
     the <code>let</code> keyword as follows:
 </p>
 <p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     let x = 5;
 
     let x = x + 1;
@@ -217,8 +211,7 @@ fn main() {
     scope is over, the inner shadowing ends and <code>x</code> returns to being
     <code>6</code>. When we run this program, it will output the following:
 </p>
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/variables`
@@ -240,8 +233,7 @@ The value of x is: 6
     many spaces they want between some text by inputting space characters, and
     then we want to store that input as a number:
 </p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-fn main() {
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
     let spaces = "   ";
     let spaces = spaces.len();
 }
@@ -254,15 +246,13 @@ fn main() {
     <code>spaces</code> name. However, if we try to use <code>mut</code> for
     this, as shown here, we’ll get a compile-time error:
 </p>
-<pre><code class="language-rust ignore does_not_compile">
-fn main() {
+<pre><code class="language-rust ignore does_not_compile">fn main() {
     let mut spaces = "   ";
     spaces = spaces.len();
 }
 </code></pre>
 <p>The error says we’re not allowed to mutate a variable’s type:</p>
-<pre><code class="language-console">
-$ cargo run
+<pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
 error[E0308]: mismatched types
  --&gt; src/main.rs:3:14
