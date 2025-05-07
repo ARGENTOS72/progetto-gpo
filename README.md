@@ -16,4 +16,8 @@ To run for a different platform, use the `--platform platform` flag. E.g.
 dx serve --platform desktop
 ```
 
+Documentation
+
+https://docs.google.com/document/d/1glRH9g9qlMAR5fdO2wPinhbnBpciO1pjF_jIt1dq_BU/edit?usp=sharing
+
 Svago: https://crazycattle3d.io/
