@@ -11,8 +11,8 @@ pub fn Login() -> Element {
             href: CSS,
         }
 
-        div { class: "container mt-5 d-flex justify-content-center align-items-center",
-            div { class: "row w-100",
+        div { class: "container min-vh-100 d-flex justify-content-center align-items-center",
+            
                 div { class: "col-md-6 d-flex justify-content-center",
                     div { class: "form-container shadow p-4",
                         h3 { class: "mb-4", "LOG IN" }
@@ -57,21 +57,8 @@ pub fn Login() -> Element {
                             }
                         }
                     }
-                }
-                div { class: "col-md-6 text-center d-flex flex-column align-items-center justify-content-center",
-                    img {
-                        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1200px-Rust_programming_language_black_logo.svg.png",
-                        alt: "Crab",
-                        class: "crab mb-4",
-                    }
-                    h4 { "DIVENTA UN RUSTLER!" }
-                    p { "PUNTI FONDAMENTALI:" }
-                    ul { class: "text-start",
-                        li { "Velocità" }
-                        li { "Sicurezza" }
-                        li { "Efficienza" }
-                    }
-                }
+                
+                
             }
         }
     }
