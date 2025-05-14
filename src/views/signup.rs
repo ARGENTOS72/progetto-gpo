@@ -63,6 +63,20 @@ pub fn Signup() -> Element {
                     }
                 }
             }
+            div { class: "col-md-6 text-center d-flex flex-column align-items-center justify-content-center",
+                img {
+                    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1200px-Rust_programming_language_black_logo.svg.png",
+                    alt: "Crab",
+                    class: "crab mb-4",
+                }
+                h4 { "DIVENTA UN RUSTLER!" }
+                p { "PUNTI FONDAMENTALI:" }
+                ul { class: "text-start",
+                    li { "Velocità" }
+                    li { "Sicurezza" }
+                    li { "Efficienza" }
+                }
+            }
         }
     }
 }
