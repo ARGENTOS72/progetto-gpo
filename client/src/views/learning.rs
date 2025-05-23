@@ -8,5 +8,9 @@ pub fn Learning() -> Element {
     
     rsx! {
         
+        h1 { class: "display-4", "Lavori in corso..." }
+        p { class: "lead",
+            "Ci scusiamo per il disagio"
+        }
     }
 }

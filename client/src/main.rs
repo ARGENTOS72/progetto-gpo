@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 use crate::backend::learning_level::*;
 use crate::components::Navbar;
-use crate::views::{Account, Glossary, Home, Learning, Login, Signup};
+use crate::views::{Account, Glossary, Home, Learning, Login, Signup, Playground};
 
 mod backend;
 mod components;
@@ -29,6 +29,9 @@ enum Route {
 
     #[route("/learning")]
     Learning {},
+
+    #[route("/playground")]
+    Playground {},
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
