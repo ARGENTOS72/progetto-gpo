@@ -47,8 +47,8 @@ docker compose --project-name playground down
 
 # Server
 
-**⚠ Important**
-The server requires the [Docker](#docker) to be running
+> [!WARNING]
+> The server requires the [Docker](#docker) to be running
 
 In order to run the playgound server locally, enter the server folder and run this command:
 ```bash
