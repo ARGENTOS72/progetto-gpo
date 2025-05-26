@@ -62,7 +62,7 @@ fn App() -> Element {
         document::Link { rel: "stylesheet", href: MAIN_SCSS }
 
         div {
-            style: "height: 100%",
+            style: "height: 100vh",
             Router::<Route> {}
         }
     }
