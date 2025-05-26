@@ -42,15 +42,18 @@ pub fn Home() -> Element {
                 }
             }
         }
-        div {class: "position-absolute top-100 start-50 translate-middle-x text-muted",
-            h6 {
-                "Creato dal gruppo"
+        div {  
+            class:"justify-content-center d-flex align-items-end w-100 position-absolute bottom-0 start-50 translate-middle-x pb-1",
+        
+            div {
+                class: "text-center text-break w-50 text-muted",
+                h6 {
+                    "Creato dal gruppo"
+                }
+                p {
+                    "Tomas Mateo Maurino Maceira, Aron Capraro, Giacomo Pascualini, Gabriele Bardin, Yari Montanaro, Sebastiano Tiveron"
+                } 
             }
-            p {
-                "Tomas Mateo Maurino Maceira, Aron Capraro, Giacomo Pascualini, Gabriele Bardin, Yari Montanaro, Sebastiano Tiveron"
-            }
-            
-
         }
 
         // style { "scoped": "false", lang: "css",
