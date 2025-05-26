@@ -65,7 +65,7 @@ pub fn Navbar() -> Element {
                         }
                     }
 
-                    div { class: "d-flex",
+                    div { class: "d-flex mx-2",
                         Link {
                             to: Route::Login{},
                             class: "btn btn-primary",
