@@ -1,53 +1,114 @@
+/* Layout principale */
 .playground-container {
-    background-color: #1e1e1e;
-    color: #d4d4d4;
+    display: flex;
+    flex-direction: column;
+    height: 94vh;
+    padding: 2vw;
+    background-color: #f7f7f7;
+    color: #333;
     font-family: 'Fira Code', monospace;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 90%;
-    margin: auto;
+    box-sizing: border-box;
 }
 
+/* Titolo */
+.playground-container h1 {
+    margin-bottom: 0.3rem;
+    font-size: 2rem;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+/* Editor al centro */
+#playground_editor {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-bottom: 0.3rem;
+}
+
+/* Textarea editor */
 .editor-textarea {
     width: 100%;
-    height: 300px;
-    background-color: #252526;
-    color: #d4d4d4;
-    border: none;
-    padding: 10px;
-    font-size: 14px;
-}
-
-.run-btn, .stdin-input, .command-input {
-    margin-top: 10px;
-}
-
-.output-toggle {
-    margin-top: 20px;
-    background-color: #2d2d2d;
+    height: 40vh;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    padding: 1rem;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 10px;
+    resize: vertical;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Pulsante run */
+.run-btn {
+    margin-top: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #e55b00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background 0.3s;
+}
+
+.run-btn:hover {
+    background-color: #ff6600;
+}
+
+/* Tendina output
+.output-toggle {
+    margin-top: 1rem;
+    background-color: #e9ecef;
+    padding: 0rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+} */
+
+/* Box comandi */
+.command-box {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.4rem;
+    flex-wrap: wrap;
+}
+
+/* Input comando */
+.command-input {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
+
+/* Pulsante comando */
+#playground_command_btn {
+    padding: 0.6rem 1.2rem;
+    background-color: #dc9c05;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#playground_command_btn:hover {
+    background-color: #eda704;
 }
 
 .output-box {
     white-space: pre-wrap;
     font-family: monospace;
     padding: 10px;
-    background-color: #1e1e1e;
-    border: 1px solid #444;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
     margin-top: 10px;
     overflow-y: auto;
-    max-height: 200px;
-}
-
-.stdin-box, .command-box {
-    margin-top: 15px;
-}
-
-.exterr {
-    color: red;
-}
-
-.err {
-    color: darkred;
+    height: auto;
+    border-radius: 6px;
+    
 }

@@ -228,65 +228,71 @@ pub fn Playground() -> Element {
             rel: "stylesheet",
             href: CSS,
         }
+        div { id: "main_div", class: "playground-container",
+            h1 { "Rust Playground" }
 
-        div {// class: "container min-vh-100 d-flex justify-content-center align-items-center",
-            div { id : "main_div",
-                h1 { "Rust Playground" }
-
-                div { id: "playground_panels_container",
-                    div {
-                        textarea {//client_file.rs input
-                            id: "playground_file_input",
-                            name: "playground_file_input",
-                            rows: "4",
-                            cols: "50",
-                            "{DEFAULT_FN}"
-                        },
-                        button {//send file input button
-                            id: "playground_file_input_btn",
-                            onclick: move |_| {
-                                if *run_compile_clicked.read() {
-                                    //shutdown
-                                    shutdown_client.set(true);
-
-                                } else {
-                                    //elaborate run & compile request
-                                    shutdown_client.set(false);
-                                    run_compile_clicked.set(true);//report that request has started (toggle now in STOP)
-                                    run_compile();
-
-                                }
-                            },
-                            match *run_compile_clicked.read() {
-                                true => "◼ Stop",
-                                false => "▶ Compile & Run",
-                            }
-                            
+            div { id: "playground_editor",
+                textarea {
+                    id: "playground_file_input",
+                    name: "playground_file_input",
+                    class: "editor-textarea",
+                    "{DEFAULT_FN}"
+                }
+                button {
+                    id: "playground_file_input_btn",
+                    class: "run-btn",
+                    onclick: move |_| {
+                        if *run_compile_clicked.read() {
+                            shutdown_client.set(true);
+                        } else {
+                            shutdown_client.set(false);
+                            run_compile_clicked.set(true);
+                            run_compile();
                         }
-                    }
-                    div {
-                        code {//client_file.rs output
-                            id: "playground_file_output"
-                        },
-                        div {
-                            textarea {//client_file.rs input stdin
-                                id: "playground_stdin",
-                                name: "playground_stdin",
-                                rows: "4",
-                                cols: "50",
-                                placeholder: "Send something to the program",
-                            },
-                            button {//send file input button
-                                id: "playground_stdin_btn",
-                                onclick: move |_| {
-                                    send_input();
-                                },
-                                "▶ send input"
-                            }
-                        }
+                    },
+                    match *run_compile_clicked.read() {
+                        true => "◼ Stop",
+                        false => "▶ Compile & Run",
                     }
                 }
+                
+                    code {
+                        id: "playground_file_output",
+                        
+                        alt:"Output",
+                        class: "output-box"
+                    }
+                
             }
+
+                div { class: "command-box",
+                    input {
+                        id: "playground_command",
+                        name: "playground_command",
+                        r#type: "text",
+                        placeholder: "Run cargo commands (e.g., cargo check)",
+                        class: "command-input"
+                    }
+                    button {
+                        id: "playground_command_btn",
+                        onclick: move |_| {
+                            spawn(async move {
+                                match js_get_in("playground_command").await {
+                                    Ok(cmd) => {
+                                        if let Some(command) = cmd.as_str() {
+                                            client.write().send_input_req(format!("__CMD__{}", command));
+                                        }
+                                    },
+                                    Err(err) => {
+                                        js_append_out(JsonInfo::from_string("error".to_string(), format!("Command error: {err}")));
+                                    }
+                                }
+                            });
+                        },
+                        "▶ Run Command"
+                    }
+                }
+            
         }
     }
 }
